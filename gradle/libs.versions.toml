@@ -17,6 +17,7 @@ junit = "4.13.2"
 kermit = "2.0.8"
 kotlin = "2.2.21"
 kotlinx-coroutines = "1.10.2"
+kotlinxDatetime = "0.7.1"
 ktor = "3.3.2"
 kotlinx-serialization = "1.9.0"
 androidx-security-crypto = "1.1.0"
@@ -44,6 +45,7 @@ kotlinx-coroutinesSwing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-s
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 # Ktor
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
