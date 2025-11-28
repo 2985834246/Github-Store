@@ -147,20 +147,23 @@ compose.desktop {
         mainClass = "zed.rainxch.githubstore.MainKt"
 
         nativeDistributions {
+            packageName = "Github Store"
+            packageVersion = "1.0.0"
+
+            vendor = "rainxchzed"
+
+            includeAllModules = true
+
             targetFormats(
                 TargetFormat.Dmg,
                 TargetFormat.Pkg,
 
                 TargetFormat.Exe,
                 TargetFormat.Msi,
-                
+
                 TargetFormat.Deb,
                 TargetFormat.Rpm,
             )
-            packageName = "Github Store"
-            packageVersion = "1.0.0"
-
-            vendor = "rainxchzed"
 
             windows {
                 iconFile.set(project.file("logo/app_icon.ico"))
@@ -168,22 +171,17 @@ compose.desktop {
                 shortcut = true
                 perUserInstall = true
             }
+
             macOS {
                 iconFile.set(project.file("logo/app_icon.icns"))
                 bundleID = "zed.rainxch.githubstore"
             }
+
             linux {
                 iconFile.set(project.file("logo/app_icon.png"))
                 appRelease = "Github Store"
                 debPackageVersion = "1.0.0"
             }
-
-            modules(
-                "java.sql",
-                "java.desktop",
-                "java.logging",
-                "java.net.http"
-            )
         }
     }
 }
