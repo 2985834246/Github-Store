@@ -29,7 +29,9 @@ actual val platformModule: Module = module {
 
     single<FileLocationsProvider> {
         val platform = getPlatform()
-        DesktopFileLocationsProvider(platform = platform.type)
+        DesktopFileLocationsProvider(
+            platform = platform.type
+        )
     }
 
     single<TokenStore> {

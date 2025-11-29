@@ -1,5 +1,6 @@
 package zed.rainxch.githubstore.feature.details.presentation
 
+import zed.rainxch.githubstore.core.domain.model.Architecture
 import zed.rainxch.githubstore.core.domain.model.GithubRepoSummary
 import zed.rainxch.githubstore.core.domain.model.GithubRelease
 import zed.rainxch.githubstore.core.domain.model.GithubAsset
@@ -28,6 +29,7 @@ data class DetailsState(
     val installError: String? = null,
 
     val downloadStage: DownloadStage = DownloadStage.IDLE,
+    val systemArchitecture: Architecture = Architecture.UNKNOWN
 )
 
 data class InstallLogItem(
