@@ -113,44 +113,190 @@ class DesktopInstaller(
             }
 
             "deb" -> {
-                try {
-                    val pb = ProcessBuilder("gdebi-gtk", file.absolutePath)
-                    pb.start()
-                } catch (e: IOException) {
-                    try {
-                        val pb = ProcessBuilder("xdg-open", file.absolutePath)
-                        pb.start()
-                    } catch (e2: IOException) {
-                        openTerminalForPackageInstall("dpkg", file.absolutePath)
-                    }
-                }
+                installDebPackage(file)
             }
 
             "rpm" -> {
-                try {
-                    val pb = ProcessBuilder("xdg-open", file.absolutePath)
-                    pb.start()
-                } catch (e: IOException) {
-                    openTerminalForPackageInstall("rpm", file.absolutePath)
-                }
+                installRpmPackage(file)
             }
 
             else -> throw IllegalArgumentException("Unsupported Linux installer: .$ext")
         }
     }
 
+    private fun installDebPackage(file: File) {
+        Logger.d { "Installing DEB package: ${file.absolutePath}" }
+
+        val installMethods = listOf(
+            listOf("pkexec", "apt", "install", "-y", file.absolutePath),
+
+            listOf("pkexec", "sh", "-c", "dpkg -i '${file.absolutePath}' || apt-get install -f -y"),
+
+            listOf("gdebi-gtk", file.absolutePath),
+
+            null
+        )
+
+        for (method in installMethods) {
+            if (method == null) {
+                openTerminalForDebInstall(file.absolutePath)
+                return
+            }
+
+            try {
+                Logger.d { "Trying installation method: ${method.joinToString(" ")}" }
+                val process = ProcessBuilder(method).start()
+                val exitCode = process.waitFor()
+
+                if (exitCode == 0) {
+                    Logger.d { "DEB package installed successfully" }
+                    return
+                } else {
+                    Logger.w { "Installation method failed with exit code: $exitCode" }
+                }
+            } catch (e: IOException) {
+                Logger.w { "Installation method not available: ${e.message}" }
+            }
+        }
+
+        throw IOException("Could not install DEB package. Please install it manually.")
+    }
+
+    private fun installRpmPackage(file: File) {
+        Logger.d { "Installing RPM package: ${file.absolutePath}" }
+
+        val installMethods = listOf(
+            listOf("pkexec", "dnf", "install", "-y", file.absolutePath),
+
+            listOf("pkexec", "yum", "install", "-y", file.absolutePath),
+
+            listOf("pkexec", "zypper", "install", "-y", file.absolutePath),
+
+            listOf("pkexec", "rpm", "-i", file.absolutePath),
+
+            null
+        )
+
+        for (method in installMethods) {
+            if (method == null) {
+                openTerminalForRpmInstall(file.absolutePath)
+                return
+            }
+
+            try {
+                Logger.d { "Trying installation method: ${method.joinToString(" ")}" }
+                val process = ProcessBuilder(method).start()
+                val exitCode = process.waitFor()
+
+                if (exitCode == 0) {
+                    Logger.d { "RPM package installed successfully" }
+                    return
+                } else {
+                    Logger.w { "Installation method failed with exit code: $exitCode" }
+                }
+            } catch (e: IOException) {
+                Logger.w { "Installation method not available: ${e.message}" }
+            }
+        }
+
+        throw IOException("Could not install RPM package. Please install it manually.")
+    }
+
+    private fun openTerminalForDebInstall(filePath: String) {
+        Logger.d { "Opening terminal for DEB installation" }
+
+        val terminals = listOf(
+            listOf(
+                "gnome-terminal",
+                "--",
+                "bash",
+                "-c",
+                "echo 'Installing $filePath...'; sudo dpkg -i '$filePath' && sudo apt-get install -f -y; echo ''; echo 'Installation complete. Press Enter to close...'; read"
+            ),
+            listOf(
+                "konsole",
+                "-e",
+                "bash",
+                "-c",
+                "echo 'Installing $filePath...'; sudo dpkg -i '$filePath' && sudo apt-get install -f -y; echo ''; echo 'Installation complete. Press Enter to close...'; read"
+            ),
+            listOf(
+                "xterm",
+                "-e",
+                "bash",
+                "-c",
+                "echo 'Installing $filePath...'; sudo dpkg -i '$filePath' && sudo apt-get install -f -y; echo ''; echo 'Installation complete. Press Enter to close...'; read"
+            ),
+            listOf(
+                "xfce4-terminal",
+                "-e",
+                "bash -c \"echo 'Installing $filePath...'; sudo dpkg -i '$filePath' && sudo apt-get install -f -y; echo ''; echo 'Installation complete. Press Enter to close...'; read\""
+            )
+        )
+
+        for (terminalCmd in terminals) {
+            try {
+                Logger.d { "Trying terminal: ${terminalCmd[0]}" }
+                ProcessBuilder(terminalCmd).start()
+                return
+            } catch (e: IOException) {
+                Logger.w { "Terminal not available: ${terminalCmd[0]}" }
+            }
+        }
+
+        throw IOException("Could not find a terminal emulator to run package installation")
+    }
+
+    private fun openTerminalForRpmInstall(filePath: String) {
+        Logger.d { "Opening terminal for RPM installation" }
+
+        val terminals = listOf(
+            listOf(
+                "gnome-terminal",
+                "--",
+                "bash",
+                "-c",
+                "echo 'Installing $filePath...'; sudo dnf install -y '$filePath' || sudo yum install -y '$filePath' || sudo rpm -i '$filePath'; echo ''; echo 'Installation complete. Press Enter to close...'; read"
+            ),
+            listOf(
+                "konsole",
+                "-e",
+                "bash",
+                "-c",
+                "echo 'Installing $filePath...'; sudo dnf install -y '$filePath' || sudo yum install -y '$filePath' || sudo rpm -i '$filePath'; echo ''; echo 'Installation complete. Press Enter to close...'; read"
+            ),
+            listOf(
+                "xterm",
+                "-e",
+                "bash",
+                "-c",
+                "echo 'Installing $filePath...'; sudo dnf install -y '$filePath' || sudo yum install -y '$filePath' || sudo rpm -i '$filePath'; echo ''; echo 'Installation complete. Press Enter to close...'; read"
+            )
+        )
+
+        for (terminalCmd in terminals) {
+            try {
+                Logger.d { "Trying terminal: ${terminalCmd[0]}" }
+                ProcessBuilder(terminalCmd).start()
+                return
+            } catch (e: IOException) {
+                Logger.w { "Terminal not available: ${terminalCmd[0]}" }
+            }
+        }
+
+        throw IOException("Could not find a terminal emulator to run package installation")
+    }
+
+
     private fun installAppImage(file: File) {
         Logger.d { "Installing AppImage: ${file.absolutePath}" }
 
-        // Get Desktop directory
         val desktopDir = getDesktopDirectory()
         Logger.d { "Desktop directory: ${desktopDir.absolutePath}" }
         Logger.d { "Desktop exists: ${desktopDir.exists()}, isDirectory: ${desktopDir.isDirectory}, canWrite: ${desktopDir.canWrite()}" }
 
-        // Copy file to desktop with its original name
         val destinationFile = File(desktopDir, file.name)
 
-        // If file already exists on desktop, add a number suffix
         val finalDestination = if (destinationFile.exists()) {
             Logger.d { "File already exists, generating unique name" }
             generateUniqueFileName(desktopDir, file.name)
@@ -161,21 +307,17 @@ class DesktopInstaller(
         Logger.d { "Final destination: ${finalDestination.absolutePath}" }
 
         try {
-            // Copy the file
             Logger.d { "Copying file..." }
             file.copyTo(finalDestination, overwrite = false)
             Logger.d { "Copy successful, file size: ${finalDestination.length()} bytes" }
 
-            // Make it executable
             val executableSet = finalDestination.setExecutable(true, false)
             Logger.d { "Set executable: $executableSet" }
 
-            // Verify the file exists
             if (!finalDestination.exists()) {
                 throw IllegalStateException("File was copied but doesn't exist at destination")
             }
 
-            // Optionally, try to open the desktop folder to show the file
             try {
                 Logger.d { "Attempting to open desktop folder..." }
                 if (Desktop.isDesktopSupported()) {
@@ -187,7 +329,6 @@ class DesktopInstaller(
                 }
             } catch (e: Exception) {
                 Logger.w { "Could not open desktop folder: ${e.message}" }
-                // Not a critical error, just log it
             }
 
             Logger.d { "AppImage installation completed successfully" }
@@ -215,7 +356,6 @@ class DesktopInstaller(
     }
 
     private fun getDesktopDirectory(): File {
-        // Try XDG user dirs first (most reliable on modern Linux)
         try {
             val process = ProcessBuilder("xdg-user-dir", "DESKTOP").start()
             val output = process.inputStream.bufferedReader().readText().trim()
@@ -228,16 +368,14 @@ class DesktopInstaller(
                 }
             }
         } catch (e: Exception) {
-            // Fall through to alternatives
         }
 
-        // Fallback to common Desktop locations
         val homeDir = System.getProperty("user.home")
         val desktopCandidates = listOf(
             File(homeDir, "Desktop"),
             File(homeDir, "desktop"),
             File(homeDir, ".local/share/Desktop"),
-            File(homeDir) // Last resort: home directory
+            File(homeDir)
         )
 
         return desktopCandidates.firstOrNull { it.exists() && it.isDirectory }
@@ -268,40 +406,4 @@ class DesktopInstaller(
         return candidateFile
     }
 
-    private fun openTerminalForPackageInstall(packageManager: String, filePath: String) {
-        val terminals = listOf(
-            listOf(
-                "gnome-terminal",
-                "--",
-                "bash",
-                "-c",
-                "sudo $packageManager -i $filePath; read -p 'Press Enter to close...'"
-            ),
-            listOf(
-                "konsole",
-                "-e",
-                "bash",
-                "-c",
-                "sudo $packageManager -i $filePath; read -p 'Press Enter to close...'"
-            ),
-            listOf(
-                "xterm",
-                "-e",
-                "bash",
-                "-c",
-                "sudo $packageManager -i $filePath; read -p 'Press Enter to close...'"
-            )
-        )
-
-        for (terminalCmd in terminals) {
-            try {
-                val pb = ProcessBuilder(terminalCmd)
-                pb.start()
-                return
-            } catch (e: IOException) {
-            }
-        }
-
-        throw IOException("Could not find a terminal emulator to run package installation")
-    }
 }
