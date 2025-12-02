@@ -50,6 +50,12 @@ The repository is currently private while the core is being stabilized, but it w
 ## 🔃 Download
 Go to the [Releases](https://github.com/rainxchzed/Github-Store/releases) to download the latest Installer.
 
+<p align="center">
+Github Store is a cross-platform “play store” for GitHub releases.  
+It discovers repositories that ship real installable binaries and lets you install the latest release in one click.
+</p>
+
+
 ## 🚀 Features
 
 - **Smart discovery**
