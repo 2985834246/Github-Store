@@ -1,8 +1,10 @@
 package zed.rainxch.githubstore.app.di
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 import zed.rainxch.githubstore.MainViewModel
 import zed.rainxch.githubstore.core.data.data_source.DefaultTokenDataSource
@@ -47,7 +49,12 @@ val coreModule: Module = module {
         )
     }
 
-    viewModelOf(::MainViewModel)
+    viewModel {
+        MainViewModel(
+            tokenDataSource = get(),
+            themesRepository = get()
+        )
+    }
 }
 
 val authModule: Module = module {
@@ -58,7 +65,21 @@ val authModule: Module = module {
     factory { ObserveAccessTokenUseCase(get()) }
     factory { LogoutUseCase(get()) }
 
-    viewModelOf(::AuthenticationViewModel)
+    single<CoroutineScope> {
+        CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    }
+
+    viewModel {
+        AuthenticationViewModel(
+            startDeviceFlow = get(),
+            awaitDeviceToken = get(),
+            logoutUc = get(),
+            observeAccessToken = get(),
+            browserHelper = get(),
+            clipboardHelper = get(),
+            scope = get(),
+        )
+    }
 }
 
 val homeModule: Module = module {
@@ -69,7 +90,12 @@ val homeModule: Module = module {
         )
     }
 
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel {
+        HomeViewModel(
+            homeRepository = get(),
+            tokenDataSource = get()
+        )
+    }
 }
 
 val searchModule: Module = module {
@@ -79,7 +105,11 @@ val searchModule: Module = module {
         )
     }
 
-    viewModel { SearchViewModel(get()) }
+    viewModel {
+        SearchViewModel(
+            searchRepository = get()
+        )
+    }
 }
 
 val detailsModule: Module = module {
@@ -100,5 +130,10 @@ val detailsModule: Module = module {
 }
 
 val settingsModule: Module = module {
-    viewModelOf(::SettingsViewModel)
+    viewModel {
+        SettingsViewModel(
+            browserHelper = get(),
+            themesRepository = get()
+        )
+    }
 }
