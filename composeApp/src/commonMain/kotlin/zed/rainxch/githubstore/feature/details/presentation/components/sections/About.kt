@@ -16,12 +16,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.coil3.Coil3ImageTransformerImpl
 import com.mikepenz.markdown.compose.Markdown
+import io.github.fletchmckee.liquid.liquefiable
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
+import zed.rainxch.githubstore.feature.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.githubstore.feature.details.presentation.utils.rememberMarkdownColors
 import zed.rainxch.githubstore.feature.details.presentation.utils.rememberMarkdownTypography
 
 fun LazyListScope.about(readmeMarkdown: String) {
     item {
+        val liquidState = LocalTopbarLiquidState.current
+
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
 
         Spacer(Modifier.height(16.dp))
@@ -31,11 +35,15 @@ fun LazyListScope.about(readmeMarkdown: String) {
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .liquefiable(liquidState)
         )
     }
 
     item {
+        val liquidState = LocalTopbarLiquidState.current
+
         Surface(
             color = Color.Transparent,
             contentColor = MaterialTheme.colorScheme.onBackground
@@ -50,7 +58,9 @@ fun LazyListScope.about(readmeMarkdown: String) {
                 typography = typography,
                 flavour = flavour,
                 imageTransformer = Coil3ImageTransformerImpl,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .liquefiable(liquidState),
             )
         }
     }

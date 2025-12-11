@@ -50,7 +50,7 @@ class AuthRepositoryImpl(
             var remainingMs = timeoutMs
             var intervalMs = (start.intervalSec.coerceAtLeast(5)) * 1000L
             var consecutiveErrors = 0
-            val maxConsecutiveErrors = 3
+            val maxConsecutiveErrors = 5
 
             Logger.d { "⏱️ Starting token polling. Expires in: ${start.expiresInSec}s, Interval: ${start.intervalSec}s" }
 
@@ -61,14 +61,16 @@ class AuthRepositoryImpl(
 
                     if (success != null) {
                         Logger.d { "✅ Token received successfully!" }
-                        tokenDataSource.save(success)
+                        withRetry(maxAttempts = 3) {
+                            tokenDataSource.save(success)
+                        }
                         return@withContext success
                     }
 
                     val error = res.exceptionOrNull()
                     val msg = (error?.message ?: "").lowercase()
 
-                    Logger.d { "📡 Poll response: $msg" }
+                    Logger.d { "📡 Poll response: $msg (errors: $consecutiveErrors/$maxConsecutiveErrors)" }
 
                     when {
                         "authorization_pending" in msg -> {
@@ -95,27 +97,37 @@ class AuthRepositoryImpl(
                             )
                         }
 
-                        "unable to resolve" in msg || "no address" in msg -> {
+                        "unable to resolve" in msg ||
+                                "no address" in msg ||
+                                "failed to connect" in msg ||
+                                "connection refused" in msg ||
+                                "network is unreachable" in msg -> {
                             consecutiveErrors++
+                            Logger.d { "⚠️ Network error, retrying... ($consecutiveErrors/$maxConsecutiveErrors)" }
+
+                            val backoffDelay = intervalMs * (1 + consecutiveErrors)
+
                             if (consecutiveErrors >= maxConsecutiveErrors) {
                                 throw Exception(
-                                    "Network connection lost during authentication. " +
+                                    "Network connection unstable during authentication. " +
                                             "Please check your connection and try again."
                                 )
                             }
-                            Logger.d { "⚠️ Network error, retrying... ($consecutiveErrors/$maxConsecutiveErrors)" }
-                            delay(intervalMs)
-                            remainingMs -= intervalMs
+                            delay(backoffDelay)
+                            remainingMs -= backoffDelay
                         }
 
                         else -> {
                             consecutiveErrors++
+                            Logger.d { "⚠️ Error: $msg (attempt $consecutiveErrors/$maxConsecutiveErrors)" }
+
                             if (consecutiveErrors >= maxConsecutiveErrors) {
                                 throw Exception("Authentication failed: $msg")
                             }
-                            Logger.d { "⚠️ Unknown error, retrying... ($consecutiveErrors/$maxConsecutiveErrors)" }
-                            delay(intervalMs)
-                            remainingMs -= intervalMs
+
+                            val backoffDelay = intervalMs * 2
+                            delay(backoffDelay)
+                            remainingMs -= backoffDelay
                         }
                     }
 
@@ -123,16 +135,20 @@ class AuthRepositoryImpl(
                     throw e
                 } catch (e: Exception) {
                     Logger.d { "❌ Poll error: ${e.message}" }
+                    Logger.d { "❌ Error type: ${e::class.simpleName}" }
                     consecutiveErrors++
+
                     if (consecutiveErrors >= maxConsecutiveErrors) {
                         throw Exception(
                             "Authentication failed after multiple attempts. " +
-                                    "Please try again.",
+                                    "Error: ${e.message}",
                             e
                         )
                     }
-                    delay(intervalMs)
-                    remainingMs -= intervalMs
+
+                    val backoffDelay = intervalMs * (1 + consecutiveErrors)
+                    delay(backoffDelay)
+                    remainingMs -= backoffDelay
                 }
             }
 
@@ -140,6 +156,22 @@ class AuthRepositoryImpl(
                 "Authentication timed out. Please try again and complete the process faster."
             )
         }
+
+    private suspend fun <T> withRetry(
+        maxAttempts: Int = 3,
+        initialDelay: Long = 1000,
+        block: suspend () -> T
+    ): T {
+        repeat(maxAttempts - 1) { attempt ->
+            try {
+                return block()
+            } catch (e: Exception) {
+                Logger.d { "⚠️ Retry attempt ${attempt + 1} failed: ${e.message}" }
+                delay(initialDelay * (attempt + 1))
+            }
+        }
+        return block()
+    }
 
     override suspend fun logout() {
         tokenDataSource.clear()

@@ -23,6 +23,7 @@ kotlinx-serialization = "1.9.0"
 androidx-security-crypto = "1.1.0"
 koin = "4.1.1"
 koinComposeMultiplatform = "4.1.1"
+liquid = "1.1.0"
 multiplatformMarkdownRenderer = "0.38.1"
 navigationCompose = "2.9.1"
 datastore = "1.2.0"
@@ -66,6 +67,7 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
 # Navigation
+liquid = { module = "io.github.fletchmckee.liquid:liquid", version.ref = "liquid" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 
 # Markdown

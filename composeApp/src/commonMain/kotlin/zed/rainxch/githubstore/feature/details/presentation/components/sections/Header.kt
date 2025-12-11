@@ -15,26 +15,34 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import io.github.fletchmckee.liquid.LiquidState
+import io.github.fletchmckee.liquid.liquefiable
 import zed.rainxch.githubstore.feature.details.presentation.DetailsAction
 import zed.rainxch.githubstore.feature.details.presentation.DetailsState
 import zed.rainxch.githubstore.feature.details.presentation.components.AppHeader
 import zed.rainxch.githubstore.feature.details.presentation.components.SmartInstallButton
+import zed.rainxch.githubstore.feature.details.presentation.utils.LocalTopbarLiquidState
 
 fun LazyListScope.header(
     state: DetailsState,
-    onAction: (DetailsAction) -> Unit
+    onAction: (DetailsAction) -> Unit,
 ) {
     item {
+        val liquidState = LocalTopbarLiquidState.current
+
         if (state.repository != null) {
             AppHeader(
                 author = state.userProfile,
                 release = state.latestRelease,
-                repository = state.repository
+                repository = state.repository,
+                modifier = Modifier.liquefiable(liquidState)
             )
         }
     }
 
     item {
+        val liquidState = LocalTopbarLiquidState.current
+
         Box(
             modifier = Modifier.fillMaxWidth(),
         ) {
@@ -79,6 +87,7 @@ fun LazyListScope.header(
                             modifier = Modifier.size(24.dp)
                         )
                     },
+                    modifier = Modifier.liquefiable(liquidState)
                 )
             }
         }

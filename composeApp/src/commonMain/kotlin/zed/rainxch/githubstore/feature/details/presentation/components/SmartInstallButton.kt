@@ -38,12 +38,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import io.github.fletchmckee.liquid.liquefiable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import zed.rainxch.githubstore.core.domain.model.Architecture
 import zed.rainxch.githubstore.core.domain.model.GithubAsset
 import zed.rainxch.githubstore.feature.details.presentation.DetailsAction
 import zed.rainxch.githubstore.feature.details.presentation.DetailsState
 import zed.rainxch.githubstore.feature.details.presentation.DownloadStage
+import zed.rainxch.githubstore.feature.details.presentation.utils.LocalTopbarLiquidState
 import zed.rainxch.githubstore.feature.details.presentation.utils.extractArchitectureFromName
 import zed.rainxch.githubstore.feature.details.presentation.utils.isExactArchitectureMatch
 
@@ -57,6 +59,8 @@ fun SmartInstallButton(
     modifier: Modifier = Modifier,
     state: DetailsState
 ) {
+    val liquidState = LocalTopbarLiquidState.current
+
     val enabled = remember(primaryAsset, isDownloading, isInstalling) {
         primaryAsset != null && !isDownloading && !isInstalling
     }
@@ -86,7 +90,8 @@ fun SmartInstallButton(
                     onClick = {
                         onAction(DetailsAction.InstallPrimary)
                     }
-                ),
+                )
+                .liquefiable(liquidState),
             colors = CardDefaults.elevatedCardColors(
                 containerColor = if (enabled) {
                     MaterialTheme.colorScheme.primary
