@@ -15,35 +15,48 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GithubStoreButton(
     text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     icon: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    style: GithubButtonStyle = GithubButtonStyle.Filled
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.outline,
-            contentColor = MaterialTheme.colorScheme.outlineVariant,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-            disabledContentColor = MaterialTheme.colorScheme.onSurface,
-        ),
+        colors = style.colors(),
         enabled = enabled,
-        contentPadding = PaddingValues(
-            all = 12.dp
-        )
+        shape = MaterialTheme.shapes.large,
+        contentPadding = if (icon != null) {
+            PaddingValues(start = 16.dp, end = 24.dp, top = 10.dp, bottom = 10.dp)
+        } else {
+            PaddingValues(horizontal = 24.dp, vertical = 10.dp)
+        }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             icon?.invoke()
-
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.labelLarge, // Standard for buttons
             )
         }
+    }
+}
+
+enum class GithubButtonStyle {
+    Filled,
+    Tonal,
+    Outlined,
+    Text;
+
+    @Composable
+    fun colors() = when (this) {
+        Filled -> ButtonDefaults.buttonColors()
+        Tonal -> ButtonDefaults.filledTonalButtonColors()
+        Outlined -> ButtonDefaults.outlinedButtonColors()
+        Text -> ButtonDefaults.textButtonColors()
     }
 }
