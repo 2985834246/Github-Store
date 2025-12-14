@@ -35,6 +35,8 @@ fun LazyListScope.header(
                 author = state.userProfile,
                 release = state.latestRelease,
                 repository = state.repository,
+                downloadStage = state.downloadStage,
+                downloadProgress = state.downloadProgressPercent,
                 modifier = Modifier.liquefiable(liquidState)
             )
         }

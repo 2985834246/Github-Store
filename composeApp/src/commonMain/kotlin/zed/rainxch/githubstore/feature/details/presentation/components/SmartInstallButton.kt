@@ -65,13 +65,8 @@ fun SmartInstallButton(
         primaryAsset != null && !isDownloading && !isInstalling
     }
 
-    val animatedProgress by animateFloatAsState(
-        targetValue = (progress ?: 0) / 100f,
-        animationSpec = tween(durationMillis = 500)
-    )
-
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
@@ -111,47 +106,42 @@ fun SmartInstallButton(
                 contentAlignment = Alignment.Center
             ) {
                 if (state.isDownloading || state.downloadStage != DownloadStage.IDLE) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                    // Show status text during download/install
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         when (state.downloadStage) {
                             DownloadStage.DOWNLOADING -> {
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    LinearProgressIndicator(
-                                        progress = { animatedProgress },
-                                        color = MaterialTheme.colorScheme.onPrimary,
-                                        trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-                                        modifier = Modifier.fillMaxSize(),
-                                    )
+                                Text(
+                                    text = "Downloading",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    fontWeight = FontWeight.Bold
+                                )
 
-                                    Text(
-                                        text = "Downloading... ${progress ?: 0}%",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
+                                Text(
+                                    text = "${progress ?: 0}%",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                                )
                             }
 
                             DownloadStage.VERIFYING -> {
-                                CircularProgressIndicator()
-
                                 Text(
-                                    text = "Verifying app...",
+                                    text = "Verifying",
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onPrimary
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    fontWeight = FontWeight.Bold
                                 )
                             }
 
                             DownloadStage.INSTALLING -> {
-                                CircularProgressIndicator()
-
                                 Text(
-                                    text = "Installing...",
+                                    text = "Installing",
                                     style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onPrimary
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    fontWeight = FontWeight.Bold
                                 )
                             }
 
