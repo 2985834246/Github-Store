@@ -75,12 +75,23 @@ class DesktopInstaller(
 
         return assetsToConsider.maxByOrNull { asset ->
             val name = asset.name.lowercase()
-            val idx = priority.indexOfFirst { name.endsWith(it) }
-                .let { if (it == -1) 999 else it }
 
-            val archBoost = if (isExactArchitectureMatch(name, systemArchitecture)) 10000 else 0
+            val extensionIdx = priority.indexOfFirst { name.endsWith(it) }
+            val extensionScore = if (extensionIdx == -1) {
+                -100000
+            } else {
+                (priority.size - extensionIdx) * 10000
+            }
 
-            archBoost + (-1000 * (priority.size - idx)) + asset.size
+            val archScore = if (isExactArchitectureMatch(name, systemArchitecture)) {
+                1000
+            } else {
+                0
+            }
+
+            val sizeScore = (asset.size / 1000000).coerceAtMost(100)
+
+            extensionScore + archScore + sizeScore
         }
     }
 
@@ -108,27 +119,87 @@ class DesktopInstaller(
         if (platform != PlatformType.LINUX) return LinuxPackageType.UNIVERSAL
 
         return try {
-            if (commandExists("apt")) {
+            val osRelease = tryReadOsRelease()
+            if (osRelease != null) {
+                val idLike = osRelease["ID_LIKE"]?.lowercase() ?: ""
+                val id = osRelease["ID"]?.lowercase() ?: ""
+
+                if (id in listOf("debian", "ubuntu", "linuxmint", "pop", "elementary") ||
+                    idLike.contains("debian") || idLike.contains("ubuntu")) {
+                    Logger.d { "Detected Debian-based distribution: $id" }
+                    return LinuxPackageType.DEB
+                }
+
+                if (id in listOf("fedora", "rhel", "centos", "rocky", "almalinux", "opensuse", "suse") ||
+                    idLike.contains("fedora") || idLike.contains("rhel") ||
+                    idLike.contains("suse") || idLike.contains("centos")) {
+                    Logger.d { "Detected RPM-based distribution: $id" }
+                    return LinuxPackageType.RPM
+                }
+            }
+
+            if (commandExists("apt") || commandExists("apt-get")) {
+                Logger.d { "Detected package manager: apt" }
                 return LinuxPackageType.DEB
             }
 
             if (commandExists("dnf")) {
+                Logger.d { "Detected package manager: dnf" }
                 return LinuxPackageType.RPM
             }
 
             if (commandExists("yum")) {
+                Logger.d { "Detected package manager: yum" }
                 return LinuxPackageType.RPM
             }
 
             if (commandExists("zypper")) {
+                Logger.d { "Detected package manager: zypper" }
                 return LinuxPackageType.RPM
             }
 
+            Logger.d { "Could not determine package type, defaulting to UNIVERSAL" }
             LinuxPackageType.UNIVERSAL
         } catch (e: Exception) {
             Logger.w { "Failed to detect Linux package type: ${e.message}" }
             LinuxPackageType.UNIVERSAL
         }
+    }
+
+    private fun tryReadOsRelease(): Map<String, String>? {
+        val osReleaseFiles = listOf(
+            "/etc/os-release",
+            "/usr/lib/os-release"
+        )
+
+        for (filePath in osReleaseFiles) {
+            try {
+                val file = File(filePath)
+                if (file.exists()) {
+                    val content = file.readText()
+                    return parseOsRelease(content)
+                }
+            } catch (e: Exception) {
+                Logger.w { "Could not read $filePath: ${e.message}" }
+            }
+        }
+        return null
+    }
+
+    private fun parseOsRelease(content: String): Map<String, String> {
+        val result = mutableMapOf<String, String>()
+        content.lines().forEach { line ->
+            val trimmed = line.trim()
+            if (trimmed.isNotEmpty() && !trimmed.startsWith("#")) {
+                val parts = trimmed.split("=", limit = 2)
+                if (parts.size == 2) {
+                    val key = parts[0].trim()
+                    val value = parts[1].trim().removeSurrounding("\"")
+                    result[key] = value
+                }
+            }
+        }
+        return result
     }
 
     private fun commandExists(command: String): Boolean {
@@ -188,10 +259,7 @@ class DesktopInstaller(
     private fun isExactArchitectureMatch(assetName: String, systemArch: Architecture): Boolean {
         val name = assetName.lowercase()
         return when (systemArch) {
-            Architecture.X86_64 -> name.contains("x86_64") || name.contains("amd64") || name.contains(
-                "x64"
-            )
-
+            Architecture.X86_64 -> name.contains("x86_64") || name.contains("amd64") || name.contains("x64")
             Architecture.AARCH64 -> name.contains("aarch64") || name.contains("arm64")
             Architecture.X86 -> name.contains("i386") || name.contains("i686")
             Architecture.ARM -> name.contains("armv7") || name.contains("arm")
@@ -360,7 +428,6 @@ class DesktopInstaller(
     private fun installDebPackage(file: File) {
         Logger.d { "Installing DEB package: ${file.absolutePath}" }
 
-        // NEW: Check if we are on an RPM system trying to install a DEB
         if (linuxPackageType == LinuxPackageType.RPM) {
             Logger.i { "Detected DEB package on RPM system. Initiating conversion flow." }
             openTerminalForAlienConversion(file.absolutePath)
@@ -390,6 +457,7 @@ class DesktopInstaller(
 
                 if (exitCode == 0) {
                     Logger.d { "DEB package installed successfully" }
+                    tryShowNotification("Installation Complete", "Package installed successfully")
                     return
                 } else {
                     Logger.w { "Installation method failed with exit code: $exitCode" }
@@ -402,7 +470,6 @@ class DesktopInstaller(
         throw IOException("Could not install DEB package. Please install it manually.")
     }
 
-    // NEW: Handles the conversion of DEB to RPM and subsequent installation
     private fun openTerminalForAlienConversion(filePath: String) {
         Logger.d { "Opening terminal for Alien conversion and installation" }
 
@@ -417,41 +484,57 @@ class DesktopInstaller(
             throw IOException("No terminal found to run Alien conversion.")
         }
 
-        // Script breakdown:
-        // 1. Check if alien exists. If not, try to install it (and rpm-build).
-        // 2. Create a temporary directory.
-        // 3. Run alien -r (to rpm) -c (scripts) on the file.
-        // 4. Install the resulting RPM.
-        // 5. Cleanup.
         val command = buildString {
-            append("echo 'Detected DEB package on an RPM system.'; ")
-            append("echo 'This requires the \"alien\" tool to convert the package.'; echo ''; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo 'DEB Package on RPM System Detected'; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo ''; ")
+            append("echo 'This package will be converted to RPM format.'; ")
+            append("echo 'This requires the \"alien\" tool.'; ")
+            append("echo ''; ")
 
-            // Step 1: Install Alien if missing
             append("if ! command -v alien &> /dev/null; then ")
-            append("echo 'Alien not found. Attempting to install alien and rpm-build...'; ")
-            append("sudo dnf install -y alien rpm-build || sudo yum install -y alien rpm-build || sudo zypper install -y alien rpm-build; ")
+            append("echo 'Installing alien and rpm-build...'; ")
+            append("sudo dnf install -y alien rpm-build 2>/dev/null || ")
+            append("sudo yum install -y alien rpm-build 2>/dev/null || ")
+            append("sudo zypper install -y alien rpm-build 2>/dev/null; ")
             append("fi; ")
 
-            // Check again if installation failed
             append("if ! command -v alien &> /dev/null; then ")
-            append("echo 'Failed to install alien. Please install it manually.'; read; exit 1; ")
+            append("echo ''; ")
+            append("echo 'ERROR: Failed to install alien.'; ")
+            append("echo 'Please install it manually: sudo dnf install alien rpm-build'; ")
+            append("echo ''; ")
+            append("echo 'Press Enter to close...'; read; exit 1; ")
             append("fi; ")
 
-            // Step 2 & 3: Convert
-            append("echo 'Converting package to RPM (this may take a moment)...'; ")
-            append("mkdir -p /tmp/alien_install; ")
-            append("cp '$filePath' /tmp/alien_install/pkg.deb; ")
-            append("cd /tmp/alien_install; ")
-            append("sudo alien -r -c -v pkg.deb; ")
+            append("echo ''; ")
+            append("echo 'Converting to RPM (this may take a minute)...'; ")
+            append("mkdir -p /tmp/alien_install_$$ && cd /tmp/alien_install_$$ || exit 1; ")
+            append("cp '$filePath' ./package.deb; ")
+            append("sudo alien -r -c package.deb; ")
 
-            // Step 4: Install Result
-            append("echo ''; echo 'Installing converted RPM...'; ")
-            append("sudo dnf install -y ./*.rpm || sudo yum install -y ./*.rpm || sudo rpm -i --nodeps ./*.rpm; ")
+            append("if [ ! -f *.rpm ]; then ")
+            append("echo ''; ")
+            append("echo 'ERROR: Conversion failed.'; ")
+            append("cd .. && rm -rf /tmp/alien_install_$$; ")
+            append("echo 'Press Enter to close...'; read; exit 1; ")
+            append("fi; ")
 
-            // Step 5: Cleanup and Exit
-            append("cd ..; rm -rf /tmp/alien_install; ")
-            append("echo ''; echo 'Process complete. Press Enter to close...'; read")
+            append("echo ''; ")
+            append("echo 'Installing converted RPM...'; ")
+            append("sudo dnf install -y ./*.rpm 2>/dev/null || ")
+            append("sudo yum install -y ./*.rpm 2>/dev/null || ")
+            append("sudo zypper install -y --allow-unsigned-rpm ./*.rpm 2>/dev/null || ")
+            append("sudo rpm -ivh --nodeps ./*.rpm; ")
+
+            append("echo ''; ")
+            append("cd .. && rm -rf /tmp/alien_install_$$; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo 'Installation Complete!'; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo ''; ")
+            append("echo 'Press Enter to close...'; read")
         }
 
         runCommandInTerminal(command, availableTerminals)
@@ -467,7 +550,7 @@ class DesktopInstaller(
 
             listOf("pkexec", "zypper", "install", "-y", "--no-gpg-checks", file.absolutePath),
 
-            listOf("pkexec", "rpm", "-i", "--nosignature", file.absolutePath),
+            listOf("pkexec", "rpm", "-ivh", "--nosignature", file.absolutePath),
 
             null
         )
@@ -485,6 +568,7 @@ class DesktopInstaller(
 
                 if (exitCode == 0) {
                     Logger.d { "RPM package installed successfully" }
+                    tryShowNotification("Installation Complete", "Package installed successfully")
                     return
                 } else {
                     Logger.w { "Installation method failed with exit code: $exitCode" }
@@ -498,13 +582,23 @@ class DesktopInstaller(
     }
 
     private fun openTerminalForDebInstall(filePath: String) {
-        val command =
-            "echo 'Installing DEB package...'; sudo dpkg -i '$filePath' && sudo apt-get install -f -y; echo ''; echo 'Installation complete. Press Enter to close...'; read"
+        val command = buildString {
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo 'Installing DEB Package'; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo ''; ")
+            append("sudo dpkg -i '$filePath' && sudo apt-get install -f -y; ")
+            append("echo ''; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo 'Installation Complete!'; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo ''; ")
+            append("echo 'Press Enter to close...'; read")
+        }
 
         val availableTerminals = detectAvailableTerminals()
         if (availableTerminals.isEmpty()) {
-            // Fallback for clipboard if no terminal found
-            tryShowNotification("Installation Required", "Please install manually: sudo dpkg -i '$filePath'...")
+            tryShowNotification("Installation Required", "Please install manually using your file manager")
             tryCopyToClipboard("sudo dpkg -i '$filePath' && sudo apt-get install -f -y")
             throw IOException("No terminal emulator found.")
         }
@@ -513,16 +607,26 @@ class DesktopInstaller(
     }
 
     private fun openTerminalForRpmInstall(filePath: String) {
-        val command = "echo 'Installing RPM package...'; " +
-                "sudo dnf install -y --nogpgcheck '$filePath' || " +
-                "sudo yum install -y --nogpgcheck '$filePath' || " +
-                "sudo rpm -i --nosignature '$filePath'; " +
-                "echo ''; echo 'Installation complete. Press Enter to close...'; read"
+        val command = buildString {
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo 'Installing RPM Package'; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo ''; ")
+            append("sudo dnf install -y --nogpgcheck '$filePath' 2>/dev/null || ")
+            append("sudo yum install -y --nogpgcheck '$filePath' 2>/dev/null || ")
+            append("sudo zypper install -y --no-gpg-checks '$filePath' 2>/dev/null || ")
+            append("sudo rpm -ivh --nosignature '$filePath'; ")
+            append("echo ''; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo 'Installation Complete!'; ")
+            append("echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'; ")
+            append("echo ''; ")
+            append("echo 'Press Enter to close...'; read")
+        }
 
         val availableTerminals = detectAvailableTerminals()
         if (availableTerminals.isEmpty()) {
-            // Fallback for clipboard if no terminal found
-            tryShowNotification("Installation Required", "Please install manually: sudo dnf install -y '$filePath'...")
+            tryShowNotification("Installation Required", "Please install manually using your file manager")
             tryCopyToClipboard("sudo dnf install -y --nogpgcheck '$filePath'")
             throw IOException("No terminal emulator found.")
         }
@@ -530,7 +634,6 @@ class DesktopInstaller(
         runCommandInTerminal(command, availableTerminals)
     }
 
-    // UPDATED: Refactored generic terminal runner to handle the different commands
     private fun runCommandInTerminal(command: String, terminals: List<LinuxTerminal>) {
         for (terminal in terminals) {
             try {
@@ -573,32 +676,27 @@ class DesktopInstaller(
     }
 
     private fun detectAvailableTerminals(): List<LinuxTerminal> {
-        val linuxTerminals = mutableListOf<LinuxTerminal>()
+        val availableTerminals = mutableListOf<LinuxTerminal>()
 
-        val linuxTerminalCommands = mapOf(
+        val terminalCommands = mapOf(
             LinuxTerminal.GNOME_TERMINAL to "gnome-terminal",
             LinuxTerminal.KONSOLE to "konsole",
-            LinuxTerminal.XTERM to "xterm",
             LinuxTerminal.XFCE4_TERMINAL to "xfce4-terminal",
             LinuxTerminal.ALACRITTY to "alacritty",
             LinuxTerminal.KITTY to "kitty",
             LinuxTerminal.TILIX to "tilix",
-            LinuxTerminal.MATE_TERMINAL to "mate-terminal"
+            LinuxTerminal.MATE_TERMINAL to "mate-terminal",
+            LinuxTerminal.XTERM to "xterm"
         )
 
-        for ((terminal, command) in linuxTerminalCommands) {
-            try {
-                val process = ProcessBuilder("which", command).start()
-                val exitCode = process.waitFor()
-                if (exitCode == 0) {
-                    linuxTerminals.add(terminal)
-                    Logger.d { "Found terminal: $command" }
-                }
-            } catch (_: Exception) {
+        for ((terminal, command) in terminalCommands) {
+            if (commandExists(command)) {
+                availableTerminals.add(terminal)
+                Logger.d { "Found terminal: $command" }
             }
         }
 
-        return linuxTerminals
+        return availableTerminals
     }
 
     private fun tryCopyToClipboard(text: String) {
