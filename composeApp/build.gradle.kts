@@ -218,6 +218,7 @@ compose.desktop {
                 TargetFormat.Msi,
                 TargetFormat.Deb,
                 TargetFormat.Rpm,
+                TargetFormat.AppImage
             )
             windows {
                 iconFile.set(project.file("logo/app_icon.ico"))

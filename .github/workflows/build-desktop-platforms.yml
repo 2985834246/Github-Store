@@ -1,0 +1,104 @@
+name: Build Desktop Platform Installers
+
+on:
+  push:
+    branches:
+      - generate-installers
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        shell: bash
+
+      - name: Build Windows installers (EXE & MSI)
+        run: |
+          ./gradlew :composeApp:packageExe
+          ./gradlew :composeApp:packageMsi
+        shell: bash
+
+      - name: Upload Windows installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installers
+          path: |
+            composeApp/build/compose/binaries/main/exe/*.exe
+            composeApp/build/compose/binaries/main/msi/*.msi
+          retention-days: 30
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build macOS installers (DMG & PKG)
+        run: |
+          ./gradlew :composeApp:packageDmg
+          ./gradlew :composeApp:packagePkg
+
+      - name: Upload macOS installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-installers
+          path: |
+            composeApp/build/compose/binaries/main/dmg/*.dmg
+            composeApp/build/compose/binaries/main/pkg/*.pkg
+          retention-days: 30
+
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build Linux installers (DEB, RPM & AppImage)
+        run: |
+          ./gradlew :composeApp:packageDeb
+          ./gradlew :composeApp:packageRpm
+          ./gradlew :composeApp:packageAppImage
+
+      - name: Upload Linux installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-installers
+          path: |
+            composeApp/build/compose/binaries/main/deb/*.deb
+            composeApp/build/compose/binaries/main/rpm/*.rpm
+            composeApp/build/compose/binaries/main/app-image/*.AppImage
+          retention-days: 30
