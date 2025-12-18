@@ -169,20 +169,22 @@ fun HomeScreen(
                             )
                         }
 
-                        IconButton(
-                            shapes = IconButtonDefaults.shapes(),
-                            onClick = {
-                                onAction(HomeAction.OnAppsClick)
-                            },
-                            colors = IconButtonDefaults.iconButtonColors(
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Apps,
-                                contentDescription = "Apps",
-                                modifier = Modifier.size(24.dp)
-                            )
+                        if (state.isAppsSectionVisible) {
+                            IconButton(
+                                shapes = IconButtonDefaults.shapes(),
+                                onClick = {
+                                    onAction(HomeAction.OnAppsClick)
+                                },
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Apps,
+                                    contentDescription = "Apps",
+                                    modifier = Modifier.size(24.dp)
+                                )
+                            }
                         }
 
                         IconButton(

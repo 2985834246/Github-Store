@@ -11,7 +11,8 @@ data class HomeState(
     val isLoadingMore: Boolean = false,
     val errorMessage: String? = null,
     val hasMorePages: Boolean = true,
-    val currentCategory: HomeCategory = HomeCategory.TRENDING
+    val currentCategory: HomeCategory = HomeCategory.TRENDING,
+    val isAppsSectionVisible: Boolean = false
 )
 
 data class HomeRepo(

@@ -143,7 +143,8 @@ val homeModule: Module = module {
     viewModel {
         HomeViewModel(
             homeRepository = get(),
-            installedAppsRepository = get()
+            installedAppsRepository = get(),
+            platform = getPlatform()
         )
     }
 }

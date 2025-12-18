@@ -11,14 +11,16 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import zed.rainxch.githubstore.core.domain.Platform
+import zed.rainxch.githubstore.core.domain.model.PlatformType
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
-import zed.rainxch.githubstore.feature.home.domain.model.TrendingPeriod
 import zed.rainxch.githubstore.feature.home.domain.repository.HomeRepository
 import zed.rainxch.githubstore.feature.home.presentation.model.HomeCategory
 
 class HomeViewModel(
     private val homeRepository: HomeRepository,
-    private val installedAppsRepository: InstalledAppsRepository
+    private val installedAppsRepository: InstalledAppsRepository,
+    private val platform: Platform
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -29,7 +31,10 @@ class HomeViewModel(
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
+                loadPlatform()
+
                 loadRepos(isInitial = true)
+
                 hasLoadedInitialData = true
             }
         }
@@ -38,6 +43,14 @@ class HomeViewModel(
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = HomeState()
         )
+
+    private fun loadPlatform() {
+        viewModelScope.launch {
+            _state.update { it.copy(
+                isAppsSectionVisible = platform.type == PlatformType.ANDROID
+            ) }
+        }
+    }
 
     private fun loadRepos(isInitial: Boolean = false, category: HomeCategory? = null) {
         if (_state.value.isLoading || _state.value.isLoadingMore) {
