@@ -9,14 +9,17 @@ import zed.rainxch.githubstore.core.data.local.db.entities.InstallSource
 import zed.rainxch.githubstore.core.data.local.db.entities.InstalledApp
 import zed.rainxch.githubstore.core.data.local.db.entities.UpdateHistory
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
+import zed.rainxch.githubstore.feature.details.data.Downloader
 import zed.rainxch.githubstore.feature.details.data.Installer
 import zed.rainxch.githubstore.feature.details.domain.repository.DetailsRepository
+import java.io.File
 
 class InstalledAppsRepositoryImpl(
     private val dao: InstalledAppDao,
     private val historyDao: UpdateHistoryDao,
     private val detailsRepository: DetailsRepository,
-    private val installer: Installer
+    private val installer: Installer,
+    private val downloader: Downloader
 ) : InstalledAppsRepository {
 
     override fun getAllInstalledApps(): Flow<List<InstalledApp>> = dao.getAllInstalledApps()
@@ -53,7 +56,24 @@ class InstalledAppsRepositoryImpl(
             )
 
             if (latestRelease != null) {
-                val isUpdateAvailable = latestRelease.tagName != app.installedVersion
+                val normalizedInstalledTag = normalizeVersion(app.installedVersion)
+                val normalizedLatestTag = normalizeVersion(latestRelease.tagName)
+
+                if (normalizedInstalledTag == normalizedLatestTag) {
+                    dao.updateVersionInfo(
+                        packageName = packageName,
+                        available = false,
+                        version = latestRelease.tagName,
+                        assetName = app.latestAssetName,
+                        assetUrl = app.latestAssetUrl,
+                        assetSize = app.latestAssetSize,
+                        releaseNotes = latestRelease.description ?: "",
+                        timestamp = System.currentTimeMillis(),
+                        latestVersionName = app.latestVersionName,
+                        latestVersionCode = app.latestVersionCode
+                    )
+                    return false
+                }
 
                 val installableAssets = latestRelease.assets.filter { asset ->
                     installer.isAssetInstallable(asset.name)
@@ -61,9 +81,32 @@ class InstalledAppsRepositoryImpl(
 
                 val primaryAsset = installer.choosePrimaryAsset(installableAssets)
 
+                var isUpdateAvailable = true // Assume yes if tags differ, but verify with download
+
+                var latestVersionName: String? = null
+                var latestVersionCode: Long? = null
+
+                if (primaryAsset != null) {
+                    // Download to temp and parse
+                    val tempAssetName = primaryAsset.name + ".tmp"
+                    downloader.download(primaryAsset.downloadUrl, tempAssetName).collect { } // Download fully
+
+                    val tempPath = downloader.getDownloadedFilePath(tempAssetName)
+                    if (tempPath != null) {
+                        val latestInfo = installer.getApkInfoExtractor().extractPackageInfo(tempPath)
+                        File(tempPath).delete()
+
+                        if (latestInfo != null) {
+                            latestVersionName = latestInfo.versionName
+                            latestVersionCode = latestInfo.versionCode
+                            isUpdateAvailable = latestVersionCode > app.installedVersionCode
+                        }
+                    }
+                }
+
                 Logger.d {
-                    "Update check for ${app.appName}: current=${app.installedVersion}, " +
-                            "latest=${latestRelease.tagName}, isUpdate=$isUpdateAvailable, " +
+                    "Update check for ${app.appName}: currentTag=${app.installedVersion}, latestTag=${latestRelease.tagName}, " +
+                            "currentCode=${app.installedVersionCode}, latestCode=$latestVersionCode, isUpdate=$isUpdateAvailable, " +
                             "primaryAsset=${primaryAsset?.name}"
                 }
 
@@ -75,7 +118,9 @@ class InstalledAppsRepositoryImpl(
                     assetUrl = primaryAsset?.downloadUrl,
                     assetSize = primaryAsset?.size,
                     releaseNotes = latestRelease.description ?: "",
-                    timestamp = System.currentTimeMillis()
+                    timestamp = System.currentTimeMillis(),
+                    latestVersionName = latestVersionName,
+                    latestVersionCode = latestVersionCode
                 )
 
                 return isUpdateAvailable
@@ -103,14 +148,16 @@ class InstalledAppsRepositoryImpl(
 
     override suspend fun updateAppVersion(
         packageName: String,
-        newVersion: String,
+        newTag: String,
         newAssetName: String,
-        newAssetUrl: String
+        newAssetUrl: String,
+        newVersionName: String,
+        newVersionCode: Long
     ) {
         val app = dao.getAppByPackage(packageName) ?: return
 
         Logger.d {
-            "Updating app version: $packageName from ${app.installedVersion} to $newVersion"
+            "Updating app version: $packageName from ${app.installedVersion} to $newTag"
         }
 
         historyDao.insertHistory(
@@ -120,7 +167,7 @@ class InstalledAppsRepositoryImpl(
                 repoOwner = app.repoOwner,
                 repoName = app.repoName,
                 fromVersion = app.installedVersion,
-                toVersion = newVersion,
+                toVersion = newTag,
                 updatedAt = System.currentTimeMillis(),
                 updateSource = InstallSource.THIS_APP,
                 success = true
@@ -129,12 +176,16 @@ class InstalledAppsRepositoryImpl(
 
         dao.updateApp(
             app.copy(
-                installedVersion = newVersion,
+                installedVersion = newTag,
                 installedAssetName = newAssetName,
                 installedAssetUrl = newAssetUrl,
-                latestVersion = newVersion,
+                installedVersionName = newVersionName,
+                installedVersionCode = newVersionCode,
+                latestVersion = newTag,
                 latestAssetName = newAssetName,
                 latestAssetUrl = newAssetUrl,
+                latestVersionName = newVersionName,
+                latestVersionCode = newVersionCode,
                 isUpdateAvailable = false,
                 lastUpdatedAt = System.currentTimeMillis(),
                 lastCheckedAt = System.currentTimeMillis()
@@ -142,8 +193,16 @@ class InstalledAppsRepositoryImpl(
         )
     }
 
+    override suspend fun updateApp(app: InstalledApp) {
+        dao.updateApp(app)
+    }
+
     override suspend fun updatePendingStatus(packageName: String, isPending: Boolean) {
         val app = dao.getAppByPackage(packageName) ?: return
         dao.updateApp(app.copy(isPendingInstall = isPending))
+    }
+
+    private fun normalizeVersion(version: String): String {
+        return version.removePrefix("v").removePrefix("V").trim()
     }
 }

@@ -69,7 +69,8 @@ class HomeViewModel(
                                 isInstalled = app != null,
                                 isUpdateAvailable = app?.isUpdateAvailable ?: false
                             )
-                        }
+                        },
+                        isUpdateAvailable = installedMap.any { it.value.isUpdateAvailable }
                     )
                 }
             }

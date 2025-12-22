@@ -3,6 +3,7 @@ package zed.rainxch.githubstore.core.data.local.db
 import android.content.Context
 import androidx.room.Room
 import kotlinx.coroutines.Dispatchers
+import zed.rainxch.githubstore.core.data.local.db.migrations.MIGRATION_1_2
 
 fun initDatabase(context: Context): AppDatabase {
     val appContext = context.applicationContext
@@ -13,6 +14,6 @@ fun initDatabase(context: Context): AppDatabase {
             name = dbFile.absolutePath
         )
         .setQueryCoroutineContext(Dispatchers.IO)
-        .fallbackToDestructiveMigration(true)
+        .addMigrations(MIGRATION_1_2)
         .build()
 }

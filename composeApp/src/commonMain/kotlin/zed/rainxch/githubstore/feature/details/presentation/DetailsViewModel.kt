@@ -20,6 +20,7 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import zed.rainxch.githubstore.core.data.PackageMonitor
+import zed.rainxch.githubstore.core.data.local.db.dao.InstalledAppDao
 import zed.rainxch.githubstore.core.data.local.db.entities.FavoriteRepo
 import zed.rainxch.githubstore.core.data.local.db.entities.InstallSource
 import zed.rainxch.githubstore.core.data.local.db.entities.InstalledApp
@@ -45,7 +46,8 @@ class DetailsViewModel(
     private val helper: BrowserHelper,
     private val installedAppsRepository: InstalledAppsRepository,
     private val favoritesRepository: FavoritesRepository,
-    private val packageMonitor: PackageMonitor
+    private val packageMonitor: PackageMonitor,
+    private val dao: InstalledAppDao
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -128,40 +130,118 @@ class DetailsViewModel(
                         val dbApp = installedAppsRepository.getAppByRepoId(repo.id)
 
                         if (dbApp != null) {
-                            val isActuallyInstalled =
-                                packageMonitor.isPackageInstalled(dbApp.packageName)
+                            val isActuallyInstalled = packageMonitor.isPackageInstalled(dbApp.packageName)
                             if (!isActuallyInstalled) {
                                 if (dbApp.isPendingInstall) {
-                                    val timeSince =
-                                        System.now().toEpochMilliseconds() - dbApp.installedAt
+                                    val timeSince = System.now().toEpochMilliseconds() - dbApp.installedAt
                                     if (timeSince > 600000) {
-                                        Logger.d { "Pending install timed out for ${dbApp.packageName}, removing from DB" }
                                         installedAppsRepository.deleteInstalledApp(dbApp.packageName)
                                         null
                                     } else {
                                         dbApp
                                     }
                                 } else {
-                                    Logger.d { "App ${dbApp.packageName} not found in system, removing from DB" }
                                     installedAppsRepository.deleteInstalledApp(dbApp.packageName)
                                     null
                                 }
                             } else {
                                 if (dbApp.isPendingInstall) {
-                                    installedAppsRepository.updatePendingStatus(
-                                        dbApp.packageName,
-                                        false
-                                    )
+                                    installedAppsRepository.updatePendingStatus(dbApp.packageName, false)
                                 }
-                                val systemInfo =
-                                    packageMonitor.getInstalledPackageInfo(dbApp.packageName)
-                                if (systemInfo != null && systemInfo.versionName != dbApp.installedVersion) {
-                                    installedAppsRepository.updateAppVersion(
-                                        packageName = dbApp.packageName,
-                                        newVersion = systemInfo.versionName,
-                                        newAssetName = dbApp.installedAssetName.toString(),
-                                        newAssetUrl = dbApp.installedAssetUrl.toString()
-                                    )
+                                val systemInfo = packageMonitor.getInstalledPackageInfo(dbApp.packageName)
+                                if (systemInfo != null) {
+                                    val normalizedSystemName = normalizeVersion(systemInfo.versionName)
+                                    val normalizedDbName = normalizeVersion(dbApp.installedVersionName.orEmpty())
+                                    if (normalizedSystemName != normalizedDbName ||
+                                        systemInfo.versionCode != dbApp.installedVersionCode) {
+                                        try {
+                                            val latestRelease = detailsRepository.getLatestPublishedRelease(
+                                                owner = dbApp.repoOwner,
+                                                repo = dbApp.repoName,
+                                                defaultBranch = ""
+                                            )
+                                            if (latestRelease != null) {
+                                                val installableAssets = latestRelease.assets.filter { asset ->
+                                                    installer.isAssetInstallable(asset.name)
+                                                }
+                                                val primaryAsset = installer.choosePrimaryAsset(installableAssets)
+                                                if (primaryAsset != null) {
+                                                    val tempAssetName = primaryAsset.name + ".tmp"
+                                                    downloader.download(primaryAsset.downloadUrl, tempAssetName).collect { }
+                                                    val tempPath = downloader.getDownloadedFilePath(tempAssetName)
+                                                    if (tempPath != null) {
+                                                        val latestInfo = installer.getApkInfoExtractor().extractPackageInfo(tempPath)
+                                                        File(tempPath).delete()
+                                                        if (latestInfo != null) {
+                                                            val normalizedLatestName = normalizeVersion(latestInfo.versionName ?: "")
+                                                            if (normalizedSystemName == normalizedLatestName &&
+                                                                systemInfo.versionCode == latestInfo.versionCode) {
+                                                                installedAppsRepository.updateAppVersion(
+                                                                    packageName = dbApp.packageName,
+                                                                    newTag = latestRelease.tagName,
+                                                                    newAssetName = primaryAsset.name,
+                                                                    newAssetUrl = primaryAsset.downloadUrl,
+                                                                    newVersionName = systemInfo.versionName,
+                                                                    newVersionCode = systemInfo.versionCode
+                                                                )
+                                                                Logger.d { "Synced external update to latest for ${dbApp.packageName}: versionName ${systemInfo.versionName}, code ${systemInfo.versionCode}" }
+                                                            } else {
+                                                                dao.updateApp(dbApp.copy(
+                                                                    installedVersionName = systemInfo.versionName,
+                                                                    installedVersionCode = systemInfo.versionCode,
+                                                                    installedVersion = systemInfo.versionName,
+                                                                    installSource = InstallSource.UNKNOWN,
+                                                                    isUpdateAvailable = true
+                                                                ))
+                                                                Logger.d { "Detected unknown external update for ${dbApp.packageName}" }
+                                                            }
+                                                        } else {
+                                                            dao.updateApp(dbApp.copy(
+                                                                installedVersionName = systemInfo.versionName,
+                                                                installedVersionCode = systemInfo.versionCode,
+                                                                installedVersion = systemInfo.versionName,
+                                                                installSource = InstallSource.UNKNOWN,
+                                                                isUpdateAvailable = true
+                                                            ))
+                                                        }
+                                                    } else {
+                                                        dao.updateApp(dbApp.copy(
+                                                            installedVersionName = systemInfo.versionName,
+                                                            installedVersionCode = systemInfo.versionCode,
+                                                            installedVersion = systemInfo.versionName,
+                                                            installSource = InstallSource.UNKNOWN,
+                                                            isUpdateAvailable = true
+                                                        ))
+                                                    }
+                                                } else {
+                                                    dao.updateApp(dbApp.copy(
+                                                        installedVersionName = systemInfo.versionName,
+                                                        installedVersionCode = systemInfo.versionCode,
+                                                        installedVersion = systemInfo.versionName,
+                                                        installSource = InstallSource.UNKNOWN,
+                                                        isUpdateAvailable = true
+                                                    ))
+                                                }
+                                            } else {
+                                                dao.updateApp(dbApp.copy(
+                                                    installedVersionName = systemInfo.versionName,
+                                                    installedVersionCode = systemInfo.versionCode,
+                                                    installedVersion = systemInfo.versionName,
+                                                    installSource = InstallSource.UNKNOWN,
+                                                    isUpdateAvailable = true
+                                                ))
+                                            }
+                                        } catch (e: Exception) {
+                                            Logger.w { "Failed to sync external update: ${e.message}" }
+                                            dao.updateApp(dbApp.copy(
+                                                installedVersionName = systemInfo.versionName,
+                                                installedVersionCode = systemInfo.versionCode,
+                                                installedVersion = systemInfo.versionName,
+                                                installSource = InstallSource.UNKNOWN,
+                                                isUpdateAvailable = true
+                                            ))
+                                        }
+                                    }
                                     installedAppsRepository.getAppByPackage(dbApp.packageName)
                                 } else {
                                     dbApp
@@ -595,21 +675,19 @@ class DetailsViewModel(
 
             var packageName: String
             var appName = repo.name
+            var versionName: String? = null
+            var versionCode: Long = 0L
 
             if (platform.type == PlatformType.ANDROID && assetName.lowercase().endsWith(".apk")) {
                 val apkInfo = installer.getApkInfoExtractor().extractPackageInfo(filePath)
                 if (apkInfo != null) {
                     packageName = apkInfo.packageName
                     appName = apkInfo.appName
-                    Logger.d { "Extracted APK info - package: $packageName, name: $appName" }
+                    versionName = apkInfo.versionName
+                    versionCode = apkInfo.versionCode
+                    Logger.d { "Extracted APK info - package: $packageName, name: $appName, versionName: $versionName, versionCode: $versionCode" }
                 } else {
-                    Logger.e {
-                        "Failed to extract APK info for $assetName at $filePath - skipping DB tracking. File exists: ${
-                            File(
-                                filePath
-                            ).exists()
-                        }, size: ${File(filePath).length()} (expected $assetSize)"
-                    }
+                    Logger.e { "Failed to extract APK info for $assetName" }
                     return
                 }
             } else {
@@ -619,12 +697,12 @@ class DetailsViewModel(
             if (isUpdate) {
                 installedAppsRepository.updateAppVersion(
                     packageName = packageName,
-                    newVersion = releaseTag,
+                    newTag = releaseTag,
                     newAssetName = assetName,
-                    newAssetUrl = assetUrl
+                    newAssetUrl = assetUrl,
+                    newVersionName = versionName ?: "unknown",
+                    newVersionCode = versionCode
                 )
-
-                Logger.d { "Updated app in database: $packageName to version $releaseTag" }
             } else {
                 val installedApp = InstalledApp(
                     packageName = packageName,
@@ -652,12 +730,14 @@ class DetailsViewModel(
                     releaseNotes = "",
                     systemArchitecture = installer.detectSystemArchitecture().name,
                     fileExtension = assetName.substringAfterLast('.', ""),
-                    isPendingInstall = true
+                    isPendingInstall = true,
+                    installedVersionName = versionName,
+                    installedVersionCode = versionCode,
+                    latestVersionName = versionName,
+                    latestVersionCode = versionCode
                 )
 
                 installedAppsRepository.saveInstalledApp(installedApp)
-
-                Logger.d { "Saved new app to database: $packageName, version: $releaseTag" }
             }
 
             if (_state.value.isFavorite) {
@@ -755,6 +835,10 @@ class DetailsViewModel(
                 downloader.cancelDownload(assetName)
             }
         }
+    }
+
+    private fun normalizeVersion(version: String): String {
+        return version.removePrefix("v").removePrefix("V").trim()
     }
 
     private companion object {

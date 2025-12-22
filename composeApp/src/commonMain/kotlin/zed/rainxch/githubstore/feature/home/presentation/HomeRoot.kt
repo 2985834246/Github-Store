@@ -179,11 +179,26 @@ fun HomeScreen(
                                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                                 )
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Apps,
-                                    contentDescription = "Apps",
-                                    modifier = Modifier.size(24.dp)
-                                )
+                                Box(
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Apps,
+                                        contentDescription = "Apps",
+                                        modifier = Modifier.size(24.dp)
+                                    )
+
+                                    if (state.isUpdateAvailable) {
+                                        Box(
+                                            Modifier
+                                                .size(16.dp)
+                                                .clip(CircleShape)
+                                                .background(MaterialTheme.colorScheme.primaryContainer)
+                                                .align(Alignment.TopEnd)
+                                        )
+                                    }
+                                }
                             }
                         }
 
