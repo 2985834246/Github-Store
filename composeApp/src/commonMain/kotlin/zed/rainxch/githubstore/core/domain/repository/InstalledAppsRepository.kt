@@ -19,9 +19,12 @@ interface InstalledAppsRepository {
     
     suspend fun updateAppVersion(
         packageName: String,
-        newVersion: String,
+        newTag: String,
         newAssetName: String,
-        newAssetUrl: String
+        newAssetUrl: String,
+        newVersionName: String,
+        newVersionCode: Long
     )
+    suspend fun updateApp(app: InstalledApp)
     suspend fun updatePendingStatus(packageName: String, isPending: Boolean)
 }

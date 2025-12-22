@@ -30,5 +30,9 @@ data class InstalledApp(
     val releaseNotes: String? = "",
     val systemArchitecture: String,
     val fileExtension: String,
-    val isPendingInstall: Boolean = false
+    val isPendingInstall: Boolean = false,
+    val installedVersionName: String? = null,
+    val installedVersionCode: Long = 0L,
+    val latestVersionName: String? = null,
+    val latestVersionCode: Long? = null
 )

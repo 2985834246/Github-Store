@@ -234,13 +234,16 @@ class AppsViewModel(
                 val filePath = downloader.getDownloadedFilePath(latestAssetName)
                     ?: throw IllegalStateException("Downloaded file not found")
 
+                val apkInfo = installer.getApkInfoExtractor().extractPackageInfo(filePath)
+                    ?: throw IllegalStateException("Failed to extract APK info")
+
                 updateAppInDatabase(
                     app = app,
                     newVersion = latestVersion,
                     assetName = latestAssetName,
                     assetUrl = latestAssetUrl,
-                    assetSize = latestAssetSize,
-                    filePath = filePath
+                    newVersionName = apkInfo.versionName,
+                    newVersionCode = apkInfo.versionCode
                 )
 
                 updateAppState(app.packageName, UpdateState.Installing)
@@ -436,20 +439,22 @@ class AppsViewModel(
         newVersion: String,
         assetName: String,
         assetUrl: String,
-        assetSize: Long,
-        filePath: String
+        newVersionName: String,
+        newVersionCode: Long
     ) {
         try {
             installedAppsRepository.updateAppVersion(
                 packageName = app.packageName,
-                newVersion = newVersion,
+                newTag = newVersion,
                 newAssetName = assetName,
-                newAssetUrl = assetUrl
+                newAssetUrl = assetUrl,
+                newVersionName = newVersionName,
+                newVersionCode = newVersionCode
             )
 
             installedAppsRepository.updatePendingStatus(app.packageName, true)
 
-            Logger.d { "Updated database for ${app.packageName} to version $newVersion" }
+            Logger.d { "Updated database for ${app.packageName} to tag $newVersion, versionName $newVersionName" }
         } catch (e: Exception) {
             Logger.e { "Failed to update database: ${e.message}" }
         }

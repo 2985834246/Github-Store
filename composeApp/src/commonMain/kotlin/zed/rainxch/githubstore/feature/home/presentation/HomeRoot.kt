@@ -149,60 +149,10 @@ fun HomeScreen(
                     )
                 },
                 actions = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        IconButton(
-                            shapes = IconButtonDefaults.shapes(),
-                            onClick = {
-                                onAction(HomeAction.OnSearchClick)
-                            },
-                            colors = IconButtonDefaults.iconButtonColors(
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = "Search",
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-
-                        if (state.isAppsSectionVisible) {
-                            IconButton(
-                                shapes = IconButtonDefaults.shapes(),
-                                onClick = {
-                                    onAction(HomeAction.OnAppsClick)
-                                },
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Apps,
-                                    contentDescription = "Apps",
-                                    modifier = Modifier.size(24.dp)
-                                )
-                            }
-                        }
-
-                        IconButton(
-                            shapes = IconButtonDefaults.shapes(),
-                            onClick = {
-                                onAction(HomeAction.OnSettingsClick)
-                            },
-                            colors = IconButtonDefaults.iconButtonColors(
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Settings,
-                                contentDescription = "Settings",
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
+                    topbarActions(
+                        state = state,
+                        onAction = onAction
+                    )
                 },
                 modifier = Modifier.padding(12.dp)
             )
@@ -352,6 +302,84 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+private fun topbarActions(
+    state: HomeState,
+    onAction: (HomeAction) -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
+    ) {
+        IconButton(
+            shapes = IconButtonDefaults.shapes(),
+            onClick = {
+                onAction(HomeAction.OnSearchClick)
+            },
+            colors = IconButtonDefaults.iconButtonColors(
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search",
+                modifier = Modifier.size(24.dp)
+            )
+        }
+
+        if (state.isAppsSectionVisible) {
+            IconButton(
+                shapes = IconButtonDefaults.shapes(),
+                onClick = {
+                    onAction(HomeAction.OnAppsClick)
+                },
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Apps,
+                        contentDescription = "Apps",
+                        modifier = Modifier.size(24.dp)
+                    )
+
+                    if (state.isUpdateAvailable) {
+                        Box(
+                            Modifier
+                                .size(16.dp)
+                                .padding(top = 8.dp, end = 8.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer)
+                                .align(Alignment.TopEnd)
+                        )
+                    }
+                }
+            }
+        }
+
+        IconButton(
+            shapes = IconButtonDefaults.shapes(),
+            onClick = {
+                onAction(HomeAction.OnSettingsClick)
+            },
+            colors = IconButtonDefaults.iconButtonColors(
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        ) {
+            Icon(
+                imageVector = Icons.Default.Settings,
+                contentDescription = "Settings",
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }

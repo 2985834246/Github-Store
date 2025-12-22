@@ -17,8 +17,8 @@ import zed.rainxch.githubstore.core.data.local.db.entities.UpdateHistory
         FavoriteRepo::class,
         UpdateHistory::class
     ],
-    version = 1,
-    exportSchema = false
+    version = 2,
+    exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract val installedAppDao: InstalledAppDao

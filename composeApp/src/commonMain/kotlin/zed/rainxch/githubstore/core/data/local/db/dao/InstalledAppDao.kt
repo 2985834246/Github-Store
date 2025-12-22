@@ -39,16 +39,18 @@ interface InstalledAppDao {
     suspend fun deleteByPackageName(packageName: String)
 
     @Query("""
-        UPDATE installed_apps 
-        SET isUpdateAvailable = :available, 
-            latestVersion = :version,
-            latestAssetName = :assetName,
-            latestAssetUrl = :assetUrl,
-            latestAssetSize = :assetSize,
-            releaseNotes = :releaseNotes,
-            lastCheckedAt = :timestamp 
-        WHERE packageName = :packageName
-    """)
+    UPDATE installed_apps 
+    SET isUpdateAvailable = :available, 
+        latestVersion = :version,
+        latestAssetName = :assetName,
+        latestAssetUrl = :assetUrl,
+        latestAssetSize = :assetSize,
+        releaseNotes = :releaseNotes,
+        lastCheckedAt = :timestamp,
+        latestVersionName = :latestVersionName,
+        latestVersionCode = :latestVersionCode
+    WHERE packageName = :packageName
+""")
     suspend fun updateVersionInfo(
         packageName: String,
         available: Boolean,
@@ -57,7 +59,9 @@ interface InstalledAppDao {
         assetUrl: String?,
         assetSize: Long?,
         releaseNotes: String?,
-        timestamp: Long
+        timestamp: Long,
+        latestVersionName: String?,
+        latestVersionCode: Long?
     )
 
     @Query("UPDATE installed_apps SET lastCheckedAt = :timestamp WHERE packageName = :packageName")

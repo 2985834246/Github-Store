@@ -73,12 +73,15 @@ val coreModule: Module = module {
     }
 
     viewModel {
+        val platform = getPlatform()
+
         MainViewModel(
             tokenDataSource = get(),
             themesRepository = get(),
             appStateManager = get(),
             installedAppsRepository = get(),
-            packageMonitor = get()
+            packageMonitor = get(),
+            platform = platform
         )
     }
 
@@ -103,7 +106,8 @@ val coreModule: Module = module {
             dao = get(),
             historyDao = get(),
             detailsRepository = get(),
-            installer = get()
+            installer = get(),
+            downloader = get()
         )
     }
 }
@@ -184,7 +188,7 @@ val detailsModule: Module = module {
             helper = get(),
             installedAppsRepository = get(),
             favoritesRepository = get(),
-            packageMonitor = get<PackageMonitor>()
+            packageMonitor = get<PackageMonitor>(),
         )
     }
 }
