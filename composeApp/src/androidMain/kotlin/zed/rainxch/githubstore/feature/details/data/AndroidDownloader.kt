@@ -18,6 +18,7 @@ import zed.rainxch.githubstore.core.data.services.Downloader
 import zed.rainxch.githubstore.core.data.services.FileLocationsProvider
 import zed.rainxch.githubstore.feature.details.domain.model.DownloadProgress
 import java.util.concurrent.ConcurrentHashMap
+import androidx.core.net.toUri
 
 class AndroidDownloader(
     private val context: Context,
@@ -47,11 +48,13 @@ class AndroidDownloader(
 
         Logger.d { "Starting download: $url" }
 
-        val request = DownloadManager.Request(Uri.parse(url)).apply {
+        val request = DownloadManager.Request(url.toUri()).apply {
             setTitle(safeName)
             setDescription("Downloading asset")
-            setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-            setDestinationInExternalFilesDir(context, "ghs_downloads", safeName)
+            setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
+
+            setDestinationInExternalFilesDir(context, null, "ghs_downloads/$safeName")
+
             setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             setAllowedOverMetered(true)
             setAllowedOverRoaming(false)
