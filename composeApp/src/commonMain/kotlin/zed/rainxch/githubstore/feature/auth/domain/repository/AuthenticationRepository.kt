@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import zed.rainxch.githubstore.core.domain.model.DeviceStart
 import zed.rainxch.githubstore.core.domain.model.DeviceTokenSuccess
 
-interface AuthRepository {
+interface AuthenticationRepository {
     val accessTokenFlow: Flow<String?>
     val isAuthenticatedFlow: Flow<Boolean>
 

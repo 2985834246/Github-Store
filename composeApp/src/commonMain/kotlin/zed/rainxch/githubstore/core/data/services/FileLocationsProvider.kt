@@ -1,4 +1,4 @@
-package zed.rainxch.githubstore.feature.details.data
+package zed.rainxch.githubstore.core.data.services
 
 interface FileLocationsProvider {
     fun appDownloadsDir(): String

@@ -15,15 +15,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import zed.rainxch.githubstore.core.data.PackageMonitor
+import zed.rainxch.githubstore.core.data.services.PackageMonitor
 import zed.rainxch.githubstore.core.data.local.db.entities.InstalledApp
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
 import zed.rainxch.githubstore.feature.apps.domain.repository.AppsRepository
 import zed.rainxch.githubstore.feature.apps.presentation.model.AppItem
 import zed.rainxch.githubstore.feature.apps.presentation.model.UpdateAllProgress
 import zed.rainxch.githubstore.feature.apps.presentation.model.UpdateState
-import zed.rainxch.githubstore.feature.details.data.Downloader
-import zed.rainxch.githubstore.feature.details.data.Installer
+import zed.rainxch.githubstore.core.data.services.Downloader
+import zed.rainxch.githubstore.core.data.services.Installer
 import zed.rainxch.githubstore.feature.details.domain.repository.DetailsRepository
 import java.io.File
 

@@ -3,7 +3,8 @@ package zed.rainxch.githubstore.feature.details.data
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import zed.rainxch.githubstore.core.data.ApkInfoExtractor
+import zed.rainxch.githubstore.core.data.services.ApkInfoExtractor
+import zed.rainxch.githubstore.core.data.services.Installer
 import zed.rainxch.githubstore.core.domain.model.Architecture
 import zed.rainxch.githubstore.core.domain.model.GithubAsset
 import zed.rainxch.githubstore.core.domain.model.PlatformType

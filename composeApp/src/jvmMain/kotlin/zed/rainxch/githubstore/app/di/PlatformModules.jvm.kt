@@ -6,7 +6,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import zed.rainxch.githubstore.core.data.DesktopApkInfoExtractor
 import zed.rainxch.githubstore.core.data.DesktopPackageMonitor
-import zed.rainxch.githubstore.core.data.PackageMonitor
+import zed.rainxch.githubstore.core.data.services.PackageMonitor
 import zed.rainxch.githubstore.core.data.local.data_store.createDataStore
 import zed.rainxch.githubstore.core.data.local.db.AppDatabase
 import zed.rainxch.githubstore.core.data.local.db.initDatabase
@@ -19,9 +19,9 @@ import zed.rainxch.githubstore.core.presentation.utils.JvmBrowserHelper
 import zed.rainxch.githubstore.core.presentation.utils.JvmClipboardHelper
 import zed.rainxch.githubstore.feature.auth.data.DesktopTokenStore
 import zed.rainxch.githubstore.feature.auth.data.TokenStore
-import zed.rainxch.githubstore.feature.details.data.Downloader
-import zed.rainxch.githubstore.feature.details.data.FileLocationsProvider
-import zed.rainxch.githubstore.feature.details.data.Installer
+import zed.rainxch.githubstore.core.data.services.Downloader
+import zed.rainxch.githubstore.core.data.services.FileLocationsProvider
+import zed.rainxch.githubstore.core.data.services.Installer
 import zed.rainxch.githubstore.feature.details.data.DesktopDownloader
 import zed.rainxch.githubstore.feature.details.data.DesktopFileLocationsProvider
 import zed.rainxch.githubstore.feature.details.data.DesktopInstaller

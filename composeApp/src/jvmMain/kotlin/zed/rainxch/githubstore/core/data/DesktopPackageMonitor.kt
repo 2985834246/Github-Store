@@ -1,5 +1,6 @@
 package zed.rainxch.githubstore.core.data
 
+import zed.rainxch.githubstore.core.data.services.PackageMonitor
 import zed.rainxch.githubstore.core.domain.model.SystemPackageInfo
 
 class DesktopPackageMonitor : PackageMonitor {

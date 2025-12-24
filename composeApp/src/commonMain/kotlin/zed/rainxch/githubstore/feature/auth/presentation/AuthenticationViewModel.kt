@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,14 +15,10 @@ import kotlinx.coroutines.launch
 import zed.rainxch.githubstore.core.domain.model.DeviceStart
 import zed.rainxch.githubstore.core.presentation.utils.BrowserHelper
 import zed.rainxch.githubstore.core.presentation.utils.ClipboardHelper
-import zed.rainxch.githubstore.feature.auth.domain.AwaitDeviceTokenUseCase
-import zed.rainxch.githubstore.feature.auth.domain.ObserveAccessTokenUseCase
-import zed.rainxch.githubstore.feature.auth.domain.StartDeviceFlowUseCase
+import zed.rainxch.githubstore.feature.auth.domain.repository.AuthenticationRepository
 
 class AuthenticationViewModel(
-    private val startDeviceFlow: StartDeviceFlowUseCase,
-    private val awaitDeviceToken: AwaitDeviceTokenUseCase,
-    observeAccessToken: ObserveAccessTokenUseCase,
+    private val authenticationRepository: AuthenticationRepository,
     private val browserHelper: BrowserHelper,
     private val clipboardHelper: ClipboardHelper,
     private val scope: CoroutineScope,
@@ -43,7 +37,7 @@ class AuthenticationViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 scope.launch {
-                    observeAccessToken().collect { token ->
+                    authenticationRepository.accessTokenFlow.collect { token ->
                         _state.update {
                             it.copy(
                                 loginState = if (token.isNullOrEmpty()) {
@@ -86,7 +80,7 @@ class AuthenticationViewModel(
     private fun startLogin() {
         scope.launch {
             try {
-                val start = startDeviceFlow()
+                val start = authenticationRepository.startDeviceFlow()
                 _state.update {
                     it.copy(
                         loginState = AuthLoginState.DevicePrompt(start),
@@ -99,7 +93,7 @@ class AuthenticationViewModel(
                     text = start.userCode
                 )
 
-                awaitDeviceToken(start)
+                authenticationRepository.awaitDeviceToken(start = start)
 
                 _state.update { it.copy(loginState = AuthLoginState.LoggedIn) }
 

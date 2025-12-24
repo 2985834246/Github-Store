@@ -1,4 +1,4 @@
-package zed.rainxch.githubstore.core.data
+package zed.rainxch.githubstore.core.data.services
 
 import zed.rainxch.githubstore.core.domain.model.SystemPackageInfo
 

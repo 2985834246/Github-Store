@@ -19,8 +19,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
-import zed.rainxch.githubstore.core.data.PackageMonitor
-import zed.rainxch.githubstore.core.data.local.db.dao.InstalledAppDao
+import zed.rainxch.githubstore.core.data.services.PackageMonitor
 import zed.rainxch.githubstore.core.data.local.db.entities.FavoriteRepo
 import zed.rainxch.githubstore.core.data.local.db.entities.InstallSource
 import zed.rainxch.githubstore.core.data.local.db.entities.InstalledApp
@@ -29,11 +28,10 @@ import zed.rainxch.githubstore.core.domain.model.PlatformType
 import zed.rainxch.githubstore.core.domain.repository.FavoritesRepository
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
 import zed.rainxch.githubstore.core.presentation.utils.BrowserHelper
-import zed.rainxch.githubstore.feature.details.data.Downloader
-import zed.rainxch.githubstore.feature.details.data.Installer
+import zed.rainxch.githubstore.core.data.services.Downloader
+import zed.rainxch.githubstore.core.data.services.Installer
 import zed.rainxch.githubstore.feature.details.domain.repository.DetailsRepository
 import java.io.File
-import kotlin.time.Clock
 import kotlin.time.Clock.System
 import kotlin.time.ExperimentalTime
 

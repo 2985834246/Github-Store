@@ -9,8 +9,8 @@ import zed.rainxch.githubstore.core.data.local.db.entities.InstallSource
 import zed.rainxch.githubstore.core.data.local.db.entities.InstalledApp
 import zed.rainxch.githubstore.core.data.local.db.entities.UpdateHistory
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
-import zed.rainxch.githubstore.feature.details.data.Downloader
-import zed.rainxch.githubstore.feature.details.data.Installer
+import zed.rainxch.githubstore.core.data.services.Downloader
+import zed.rainxch.githubstore.core.data.services.Installer
 import zed.rainxch.githubstore.feature.details.domain.repository.DetailsRepository
 import java.io.File
 

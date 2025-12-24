@@ -1,6 +1,5 @@
-package zed.rainxch.githubstore.feature.details.data
+package zed.rainxch.githubstore.core.data.services
 
-import zed.rainxch.githubstore.core.data.ApkInfoExtractor
 import zed.rainxch.githubstore.core.domain.model.Architecture
 import zed.rainxch.githubstore.core.domain.model.GithubAsset
 

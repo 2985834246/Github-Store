@@ -1,4 +1,4 @@
-package zed.rainxch.githubstore.feature.details.data
+package zed.rainxch.githubstore.core.data.services
 
 import kotlinx.coroutines.flow.Flow
 import zed.rainxch.githubstore.feature.details.domain.model.DownloadProgress

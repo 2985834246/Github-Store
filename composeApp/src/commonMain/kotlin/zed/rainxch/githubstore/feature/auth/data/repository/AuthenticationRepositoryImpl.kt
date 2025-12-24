@@ -12,11 +12,11 @@ import zed.rainxch.githubstore.core.domain.model.DeviceStart
 import zed.rainxch.githubstore.core.domain.model.DeviceTokenSuccess
 import zed.rainxch.githubstore.feature.auth.data.network.GitHubAuthApi
 import zed.rainxch.githubstore.feature.auth.data.getGithubClientId
-import zed.rainxch.githubstore.feature.auth.domain.repository.AuthRepository
+import zed.rainxch.githubstore.feature.auth.domain.repository.AuthenticationRepository
 
-class AuthRepositoryImpl(
+class AuthenticationRepositoryImpl(
     private val tokenDataSource: TokenDataSource,
-) : AuthRepository {
+) : AuthenticationRepository {
 
     override val accessTokenFlow: Flow<String?>
         get() = tokenDataSource.tokenFlow.map { it?.accessToken }
