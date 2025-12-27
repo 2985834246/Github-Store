@@ -1,19 +1,22 @@
 package zed.rainxch.githubstore.feature.search.presentation
 
 import zed.rainxch.githubstore.core.domain.model.GithubRepoSummary
+import zed.rainxch.githubstore.feature.search.domain.model.ProgrammingLanguage
 import zed.rainxch.githubstore.feature.search.domain.model.SearchPlatformType
 import zed.rainxch.githubstore.feature.search.domain.model.SortBy
 
 data class SearchState(
-    val search: String = "",
-    val selectedSortBy: SortBy = SortBy.BestMatch,
-    val selectedSearchPlatformType: SearchPlatformType = SearchPlatformType.All,
+    val query: String = "",
     val repositories: List<SearchRepo> = emptyList(),
-    val totalCount: Int? = null,
+    val selectedSearchPlatformType: SearchPlatformType = SearchPlatformType.All,
+    val selectedSortBy: SortBy = SortBy.BestMatch,
+    val selectedLanguage: ProgrammingLanguage = ProgrammingLanguage.All,
     val isLoading: Boolean = false,
     val isLoadingMore: Boolean = false,
+    val errorMessage: String? = null,
     val hasMorePages: Boolean = true,
-    val errorMessage: String? = null
+    val totalCount: Int? = null,
+    val isLanguageSheetVisible: Boolean = false
 )
 
 data class SearchRepo(

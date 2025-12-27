@@ -28,6 +28,7 @@ import zed.rainxch.githubstore.core.data.model.GithubRepoSearchResponse
 import zed.rainxch.githubstore.feature.home.domain.model.PaginatedRepos
 import zed.rainxch.githubstore.feature.search.data.repository.dto.GithubReleaseNetworkModel
 import zed.rainxch.githubstore.feature.search.data.repository.utils.LruCache
+import zed.rainxch.githubstore.feature.search.domain.model.ProgrammingLanguage
 import zed.rainxch.githubstore.feature.search.domain.model.SearchPlatformType
 import zed.rainxch.githubstore.feature.search.domain.repository.SearchRepository
 import zed.rainxch.githubstore.network.RateLimitException
@@ -43,10 +44,11 @@ class SearchRepositoryImpl(
     override fun searchRepositories(
         query: String,
         searchPlatformType: SearchPlatformType,
+        language: ProgrammingLanguage,
         page: Int
     ): Flow<PaginatedRepos> = channelFlow {
         val perPage = 30
-        val searchQuery = buildSearchQuery(query, searchPlatformType)
+        val searchQuery = buildSearchQuery(query, searchPlatformType, language)
 
         try {
             val responseResult = githubNetworkClient.safeApiCall<GithubRepoSearchResponse>(
@@ -129,7 +131,7 @@ class SearchRepositoryImpl(
                                             checkRepoHasInstallersCached(repo, searchPlatformType)
                                         }
                                     }
-                                } catch (e: CancellationException) {
+                                } catch (_: CancellationException) {
                                     null
                                 }
                             }
@@ -187,7 +189,8 @@ class SearchRepositoryImpl(
 
     private fun buildSearchQuery(
         userQuery: String,
-        searchPlatformType: SearchPlatformType
+        searchPlatformType: SearchPlatformType,
+        language: ProgrammingLanguage
     ): String {
         val clean = userQuery.trim()
         val q = if (clean.isBlank()) {
@@ -206,7 +209,13 @@ class SearchRepositoryImpl(
             SearchPlatformType.Linux -> " (topic:linux OR appimage in:name,description,readme OR deb in:name,description,readme)"
         }
 
-        return ("$q$scope$common" + platformHints).trim()
+        val languageFilter = if (language != ProgrammingLanguage.All && language.queryValue != null) {
+            " language:${language.queryValue}"
+        } else {
+            ""
+        }
+
+        return ("$q$scope$common" + platformHints + languageFilter).trim()
     }
 
     private data class StrictResult(
@@ -258,7 +267,7 @@ class SearchRepositoryImpl(
                                         checkRepoHasInstallersCached(repo, searchPlatformType)
                                     }
                                 }
-                            } catch (e: CancellationException) {
+                            } catch (_: CancellationException) {
                                 null
                             }
                         }

@@ -12,14 +12,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
-import zed.rainxch.githubstore.feature.home.presentation.HomeRepo
 import zed.rainxch.githubstore.feature.search.domain.repository.SearchRepository
 
 class SearchViewModel(
@@ -58,7 +54,7 @@ class SearchViewModel(
     }
 
     private fun performSearch(isInitial: Boolean = false) {
-        if (_state.value.search.isBlank()) {
+        if (_state.value.query.isBlank()) {
             _state.update {
                 it.copy(
                     isLoading = false,
@@ -91,8 +87,9 @@ class SearchViewModel(
 
                 searchRepository
                     .searchRepositories(
-                        query = _state.value.search,
+                        query = _state.value.query,
                         searchPlatformType = _state.value.selectedSearchPlatformType,
+                        language = _state.value.selectedLanguage,
                         page = currentPage
                     )
                     .collect { paginatedRepos ->
@@ -179,11 +176,24 @@ class SearchViewModel(
                 }
             }
 
-            is SearchAction.OnRepositoryClick -> { }
-            SearchAction.OnNavigateBackClick -> { }
+            is SearchAction.OnLanguageSelected -> {
+                if (_state.value.selectedLanguage != action.language) {
+                    _state.update {
+                        it.copy(
+                            selectedLanguage = action.language
+                        )
+                    }
+                    currentPage = 1
+                    searchDebounceJob?.cancel()
+                    performSearch(isInitial = true)
+                }
+            }
+
+            is SearchAction.OnRepositoryClick -> {}
+            SearchAction.OnNavigateBackClick -> {}
 
             is SearchAction.OnSearchChange -> {
-                _state.update { it.copy(search = action.query) }
+                _state.update { it.copy(query = action.query) }
 
                 searchDebounceJob?.cancel()
 
@@ -202,10 +212,18 @@ class SearchViewModel(
                             delay(500)
                             currentPage = 1
                             performSearch(isInitial = true)
-                        } catch (e: CancellationException) {
+                        } catch (_: CancellationException) {
                             Logger.d { "Debounce cancelled (expected)" }
                         }
                     }
+                }
+            }
+
+            SearchAction.OnToggleLanguageSheetVisibility -> {
+                _state.update {
+                    it.copy(
+                        isLanguageSheetVisible = !it.isLanguageSheetVisible
+                    )
                 }
             }
 
