@@ -38,6 +38,8 @@ import githubstore.composeapp.generated.resources.amoled_black_description
 import githubstore.composeapp.generated.resources.amoled_black_theme
 import githubstore.composeapp.generated.resources.section_appearance
 import githubstore.composeapp.generated.resources.selected_color
+import githubstore.composeapp.generated.resources.system_font
+import githubstore.composeapp.generated.resources.system_font_description
 import githubstore.composeapp.generated.resources.theme_color
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.githubstore.core.presentation.model.AppTheme
@@ -47,8 +49,10 @@ import zed.rainxch.githubstore.core.presentation.theme.isDynamicColorAvailable
 fun LazyListScope.appearance(
     selectedThemeColor: AppTheme,
     isAmoledThemeEnabled: Boolean,
-    onThemeColorSelected: (AppTheme) -> Unit,
     onAmoledThemeToggled: (Boolean) -> Unit,
+    onThemeColorSelected: (AppTheme) -> Unit,
+    isUsingSystemFont: Boolean,
+    onUseSystemFontToggled: (Boolean) -> Unit,
 ) {
     item {
         Text(
@@ -186,6 +190,49 @@ fun LazyListScope.appearance(
                 Switch(
                     checked = isAmoledThemeEnabled,
                     onCheckedChange = onAmoledThemeToggled
+                )
+            }
+        }
+        Spacer(Modifier.height(12.dp))
+
+        ElevatedCard(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.elevatedCardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            ),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        onUseSystemFontToggled(!isUsingSystemFont)
+                    }
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = stringResource(Res.string.system_font),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(Modifier.height(4.dp))
+
+                    Text(
+                        text = stringResource(Res.string.system_font_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Switch(
+                    checked = isUsingSystemFont,
+                    onCheckedChange = onUseSystemFontToggled
                 )
             }
         }

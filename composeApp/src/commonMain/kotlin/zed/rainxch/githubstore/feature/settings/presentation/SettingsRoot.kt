@@ -36,6 +36,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import zed.rainxch.githubstore.core.presentation.model.FontTheme
 import zed.rainxch.githubstore.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.githubstore.core.presentation.utils.ObserveAsEvents
 import zed.rainxch.githubstore.feature.settings.presentation.components.LogoutDialog
@@ -150,6 +151,16 @@ fun SettingsScreen(
                 isAmoledThemeEnabled = state.isAmoledThemeEnabled,
                 onAmoledThemeToggled = { enabled ->
                     onAction(SettingsAction.OnAmoledThemeToggled(enabled))
+                },
+                isUsingSystemFont = state.selectedFontTheme == FontTheme.SYSTEM,
+                onUseSystemFontToggled = { enabled ->
+                    onAction(
+                        SettingsAction.OnFontThemeSelected(
+                            if (enabled) {
+                                FontTheme.SYSTEM
+                            } else FontTheme.CUSTOM
+                        )
+                    )
                 }
             )
 

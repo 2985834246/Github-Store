@@ -36,8 +36,9 @@ fun App(
     }
 
     GithubStoreTheme(
+        fontTheme = state.currentFontTheme,
         appTheme = state.currentColorTheme,
-        isAmoledTheme = state.isAmoledTheme
+        isAmoledTheme = state.isAmoledTheme,
     ) {
         LaunchedEffect(state.isCheckingAuth) {
             if (!state.isCheckingAuth) {

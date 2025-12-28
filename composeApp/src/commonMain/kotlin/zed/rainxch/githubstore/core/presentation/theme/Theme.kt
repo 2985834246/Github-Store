@@ -12,6 +12,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import zed.rainxch.githubstore.core.presentation.model.AppTheme
+import zed.rainxch.githubstore.core.presentation.model.FontTheme
 
 val oceanBlueLight = lightColorScheme(
     primary = primaryLight,
@@ -407,6 +408,7 @@ val amberOrangeDark = darkColorScheme(
 fun GithubStoreTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     appTheme: AppTheme = AppTheme.OCEAN,
+    fontTheme: FontTheme = FontTheme.CUSTOM,
     isAmoledTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -428,7 +430,7 @@ fun GithubStoreTheme(
 
     MaterialExpressiveTheme(
         colorScheme = colorScheme,
-        typography = AppTypography,
+        typography = getAppTypography(fontTheme),
         motionScheme = MotionScheme.expressive(),
         shapes = MaterialTheme.shapes,
         content = content

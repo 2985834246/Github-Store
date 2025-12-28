@@ -17,6 +17,7 @@ import githubstore.composeapp.generated.resources.JetBrainsMono_Regular
 import githubstore.composeapp.generated.resources.JetBrainsMono_SemiBold
 import githubstore.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.Font
+import zed.rainxch.githubstore.core.presentation.model.FontTheme
 
 val jetbrainsMonoFontFamily
     @Composable get() = FontFamily(
@@ -39,22 +40,26 @@ val interFontFamily
 
 val baseline = Typography()
 
-val AppTypography
-    @Composable get() = Typography(
-        displayLarge = baseline.displayLarge.copy(fontFamily = jetbrainsMonoFontFamily),
-        displayMedium = baseline.displayMedium.copy(fontFamily = jetbrainsMonoFontFamily),
-        displaySmall = baseline.displaySmall.copy(fontFamily = jetbrainsMonoFontFamily),
-        headlineLarge = baseline.headlineLarge.copy(fontFamily = jetbrainsMonoFontFamily),
-        headlineMedium = baseline.headlineMedium.copy(fontFamily = jetbrainsMonoFontFamily),
-        headlineSmall = baseline.headlineSmall.copy(fontFamily = jetbrainsMonoFontFamily),
-        titleLarge = baseline.titleLarge.copy(fontFamily = jetbrainsMonoFontFamily),
-        titleMedium = baseline.titleMedium.copy(fontFamily = jetbrainsMonoFontFamily),
-        titleSmall = baseline.titleSmall.copy(fontFamily = jetbrainsMonoFontFamily),
-        bodyLarge = baseline.bodyLarge.copy(fontFamily = interFontFamily),
-        bodyMedium = baseline.bodyMedium.copy(fontFamily = interFontFamily),
-        bodySmall = baseline.bodySmall.copy(fontFamily = interFontFamily),
-        labelLarge = baseline.labelLarge.copy(fontFamily = interFontFamily),
-        labelMedium = baseline.labelMedium.copy(fontFamily = interFontFamily),
-        labelSmall = baseline.labelSmall.copy(fontFamily = interFontFamily),
-    )
-
+@Composable
+fun getAppTypography(fontTheme: FontTheme = FontTheme.CUSTOM): Typography {
+    return when (fontTheme) {
+        FontTheme.SYSTEM -> baseline
+        FontTheme.CUSTOM -> Typography(
+            displayLarge = baseline.displayLarge.copy(fontFamily = jetbrainsMonoFontFamily),
+            displayMedium = baseline.displayMedium.copy(fontFamily = jetbrainsMonoFontFamily),
+            displaySmall = baseline.displaySmall.copy(fontFamily = jetbrainsMonoFontFamily),
+            headlineLarge = baseline.headlineLarge.copy(fontFamily = jetbrainsMonoFontFamily),
+            headlineMedium = baseline.headlineMedium.copy(fontFamily = jetbrainsMonoFontFamily),
+            headlineSmall = baseline.headlineSmall.copy(fontFamily = jetbrainsMonoFontFamily),
+            titleLarge = baseline.titleLarge.copy(fontFamily = jetbrainsMonoFontFamily),
+            titleMedium = baseline.titleMedium.copy(fontFamily = jetbrainsMonoFontFamily),
+            titleSmall = baseline.titleSmall.copy(fontFamily = jetbrainsMonoFontFamily),
+            bodyLarge = baseline.bodyLarge.copy(fontFamily = interFontFamily),
+            bodyMedium = baseline.bodyMedium.copy(fontFamily = interFontFamily),
+            bodySmall = baseline.bodySmall.copy(fontFamily = interFontFamily),
+            labelLarge = baseline.labelLarge.copy(fontFamily = interFontFamily),
+            labelMedium = baseline.labelMedium.copy(fontFamily = interFontFamily),
+            labelSmall = baseline.labelSmall.copy(fontFamily = interFontFamily),
+        )
+    }
+}

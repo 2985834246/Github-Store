@@ -66,6 +66,14 @@ class SettingsViewModel(
                 }
             }
         }
+
+        viewModelScope.launch {
+            themesRepository.getFontTheme().collect { fontTheme ->
+                _state.update {
+                    it.copy(selectedFontTheme = fontTheme)
+                }
+            }
+        }
     }
 
     fun onAction(action: SettingsAction) {
@@ -124,6 +132,11 @@ class SettingsViewModel(
                 /* Handed in composable */
             }
 
+            is SettingsAction.OnFontThemeSelected -> {
+                viewModelScope.launch {
+                    themesRepository.setFontTheme(action.fontTheme)
+                }
+            }
         }
     }
 
