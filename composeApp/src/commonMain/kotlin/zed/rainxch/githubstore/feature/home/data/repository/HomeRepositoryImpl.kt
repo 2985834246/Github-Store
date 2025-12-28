@@ -30,7 +30,6 @@ import zed.rainxch.githubstore.core.domain.Platform
 import zed.rainxch.githubstore.core.domain.model.PlatformType
 import zed.rainxch.githubstore.feature.home.domain.repository.HomeRepository
 import zed.rainxch.githubstore.feature.home.domain.model.PaginatedRepos
-import zed.rainxch.githubstore.feature.home.domain.model.TrendingPeriod
 import zed.rainxch.githubstore.network.RateLimitException
 import zed.rainxch.githubstore.network.safeApiCall
 import kotlin.time.Clock

@@ -27,7 +27,7 @@
     <string name="updating_x_of_y">Actualizando %1$d de %2$d</string>
     <string name="currently_updating">Actual: %1$s</string>
 
-    <string name="percent">%1$d%%</string>
+    <string name="percent">%1$d%</string>
 
     <string name="waiting_for_authorization">Esperando autorización…</string>
     <string name="signed_in">¡Sesión iniciada!</string>
@@ -162,5 +162,31 @@
     <string name="error_generic">Error: %1$s</string>
     <string name="error_asset_not_supported">Tipo de archivo .%1$s no compatible</string>
     <string name="error_file_not_found">Archivo descargado no encontrado</string>
+
+    <string name="home_category_trending">Tendencias</string>
+    <string name="home_category_new">Nuevos</string>
+    <string name="home_category_recently_updated">Actualizados recientemente</string>
+
+    <string name="home_finding_repositories">Buscando repositorios...</string>
+    <string name="home_loading_more">Cargando...</string>
+    <string name="home_no_more_repositories">No hay más repositorios</string>
+    <string name="home_retry">Reintentar</string>
+    <string name="home_failed_to_load_repositories">No se pudieron cargar los repositorios</string>
+    <string name="home_view_details">Ver detalles</string>
+
+    <string name="updated_just_now">actualizado ahora mismo</string>
+    <string name="updated_hours_ago">actualizado hace %1$d h</string>
+    <string name="updated_yesterday">actualizado ayer</string>
+    <string name="updated_days_ago">actualizado hace %1$d días</string>
+    <string name="updated_on_date">actualizado el %1$s</string>
+
+    <string name="rate_limit_exceeded">Límite de solicitudes excedido</string>
+    <string name="rate_limit_used_all">Has usado las %1$d solicitudes de la API.</string>
+    <string name="rate_limit_used_all_free">Has usado las %1$d solicitudes gratuitas de la API.</string>
+    <string name="rate_limit_resets_in_minutes">Se restablece en %1$d minutos</string>
+    <string name="rate_limit_tip_sign_in">💡 Inicia sesión para obtener 5 000 solicitudes por hora en lugar de 60.</string>
+    <string name="rate_limit_sign_in">Iniciar sesión</string>
+    <string name="rate_limit_ok">OK</string>
+    <string name="rate_limit_close">Cerrar</string>
 
 </resources>

@@ -162,4 +162,30 @@
     <string name="error_asset_not_supported">不支持的文件类型 .%1$s</string>
     <string name="error_file_not_found">未找到下载的文件</string>
 
+    <string name="home_category_trending">热门</string>
+    <string name="home_category_new">最新</string>
+    <string name="home_category_recently_updated">最近更新</string>
+
+    <string name="home_finding_repositories">正在查找仓库…</string>
+    <string name="home_loading_more">加载中…</string>
+    <string name="home_no_more_repositories">没有更多仓库了</string>
+    <string name="home_retry">重试</string>
+    <string name="home_failed_to_load_repositories">加载仓库失败</string>
+    <string name="home_view_details">查看详情</string>
+
+    <string name="updated_just_now">刚刚更新</string>
+    <string name="updated_hours_ago">%1$d 小时前更新</string>
+    <string name="updated_yesterday">昨天更新</string>
+    <string name="updated_days_ago">%1$d 天前更新</string>
+    <string name="updated_on_date">%1$s 更新</string>
+
+    <string name="rate_limit_exceeded">请求次数已达上限</string>
+    <string name="rate_limit_used_all">已用完 %1$d 次 API 请求。</string>
+    <string name="rate_limit_used_all_free">已用完 %1$d 次免费 API 请求。</string>
+    <string name="rate_limit_resets_in_minutes">%1$d 分钟后重置</string>
+    <string name="rate_limit_tip_sign_in">💡 登录后每小时可使用 5,000 次请求，而不是 60 次！</string>
+    <string name="rate_limit_sign_in">登录</string>
+    <string name="rate_limit_ok">确定</string>
+    <string name="rate_limit_close">关闭</string>
+
 </resources>

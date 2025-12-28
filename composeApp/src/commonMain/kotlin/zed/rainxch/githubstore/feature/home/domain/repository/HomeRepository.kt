@@ -2,7 +2,6 @@ package zed.rainxch.githubstore.feature.home.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import zed.rainxch.githubstore.feature.home.domain.model.PaginatedRepos
-import zed.rainxch.githubstore.feature.home.domain.model.TrendingPeriod
 
 interface HomeRepository {
     fun getTrendingRepositories(page: Int): Flow<PaginatedRepos>

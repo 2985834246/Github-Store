@@ -1,7 +1,23 @@
 package zed.rainxch.githubstore.feature.home.presentation.model
 
-enum class HomeCategory(val displayText: String) {
-    TRENDING("Trending"),
-    NEW("New"),
-    RECENTLY_UPDATED("Recently updated"),
+import androidx.compose.runtime.Composable
+import githubstore.composeapp.generated.resources.Res
+import githubstore.composeapp.generated.resources.home_category_new
+import githubstore.composeapp.generated.resources.home_category_recently_updated
+import githubstore.composeapp.generated.resources.home_category_trending
+import org.jetbrains.compose.resources.stringResource
+
+enum class HomeCategory {
+    TRENDING,
+    NEW,
+    RECENTLY_UPDATED;
+
+    @Composable
+    fun displayText(): String {
+        return when (this) {
+            TRENDING -> stringResource(Res.string.home_category_trending)
+            NEW -> stringResource(Res.string.home_category_new)
+            RECENTLY_UPDATED -> stringResource(Res.string.home_category_recently_updated)
+        }
+    }
 }

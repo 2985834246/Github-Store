@@ -27,7 +27,7 @@
     <string name="updating_x_of_y">Mise à jour %1$d sur %2$d</string>
     <string name="currently_updating">Actuellement : %1$s</string>
 
-    <string name="percent">%1$d%%</string>
+    <string name="percent">%1$d%</string>
 
     <string name="waiting_for_authorization">En attente d’autorisation…</string>
     <string name="signed_in">Connecté !</string>
@@ -162,5 +162,31 @@
     <string name="error_generic">Erreur : %1$s</string>
     <string name="error_asset_not_supported">Type de fichier .%1$s non pris en charge</string>
     <string name="error_file_not_found">Fichier téléchargé introuvable</string>
+
+    <string name="home_category_trending">Tendances</string>
+    <string name="home_category_new">Nouveaux</string>
+    <string name="home_category_recently_updated">Récemment mis à jour</string>
+
+    <string name="home_finding_repositories">Recherche de dépôts...</string>
+    <string name="home_loading_more">Chargement...</string>
+    <string name="home_no_more_repositories">Plus aucun dépôt</string>
+    <string name="home_retry">Réessayer</string>
+    <string name="home_failed_to_load_repositories">Impossible de charger les dépôts</string>
+    <string name="home_view_details">Voir les détails</string>
+
+    <string name="updated_just_now">mis à jour à l’instant</string>
+    <string name="updated_hours_ago">mis à jour il y a %1$d h</string>
+    <string name="updated_yesterday">mis à jour hier</string>
+    <string name="updated_days_ago">mis à jour il y a %1$d j</string>
+    <string name="updated_on_date">mis à jour le %1$s</string>
+
+    <string name="rate_limit_exceeded">Limite de requêtes dépassée</string>
+    <string name="rate_limit_used_all">Vous avez utilisé les %1$d requêtes API.</string>
+    <string name="rate_limit_used_all_free">Vous avez utilisé les %1$d requêtes API gratuites.</string>
+    <string name="rate_limit_resets_in_minutes">Réinitialisation dans %1$d minutes</string>
+    <string name="rate_limit_tip_sign_in">💡 Connectez-vous pour obtenir 5 000 requêtes par heure au lieu de 60 !</string>
+    <string name="rate_limit_sign_in">Se connecter</string>
+    <string name="rate_limit_ok">OK</string>
+    <string name="rate_limit_close">Fermer</string>
 
 </resources>

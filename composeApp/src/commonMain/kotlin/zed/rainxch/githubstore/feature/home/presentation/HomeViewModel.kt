@@ -3,6 +3,9 @@ package zed.rainxch.githubstore.feature.home.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
+import githubstore.composeapp.generated.resources.Res
+import githubstore.composeapp.generated.resources.home_failed_to_load_repositories
+import githubstore.composeapp.generated.resources.no_repositories_found
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -14,6 +17,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import zed.rainxch.githubstore.core.domain.Platform
 import zed.rainxch.githubstore.core.domain.model.PlatformType
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
@@ -141,7 +145,7 @@ class HomeViewModel(
                                 repos = uniqueList,
                                 hasMorePages = paginatedRepos.hasMore,
                                 errorMessage = if (uniqueList.isEmpty() && !paginatedRepos.hasMore) {
-                                    "No repositories found"
+                                    getString(Res.string.no_repositories_found)
                                 } else null
                             )
                         }
@@ -164,7 +168,7 @@ class HomeViewModel(
                     it.copy(
                         isLoading = false,
                         isLoadingMore = false,
-                        errorMessage = t.message ?: "Failed to load repositories"
+                        errorMessage = t.message ?: getString(Res.string.home_failed_to_load_repositories)
                     )
                 }
             }

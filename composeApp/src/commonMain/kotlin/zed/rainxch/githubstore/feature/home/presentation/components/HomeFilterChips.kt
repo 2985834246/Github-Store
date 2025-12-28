@@ -23,7 +23,7 @@ fun RowScope.HomeFilterChips(
     FilterChip(
         label = {
             Text(
-                text = category.displayText,
+                text = category.displayText(),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,

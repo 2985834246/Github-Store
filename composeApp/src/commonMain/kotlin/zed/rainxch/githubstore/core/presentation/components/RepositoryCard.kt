@@ -29,6 +29,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import githubstore.composeapp.generated.resources.Res
+import githubstore.composeapp.generated.resources.home_view_details
+import githubstore.composeapp.generated.resources.installed
+import githubstore.composeapp.generated.resources.update_available
+import githubstore.composeapp.generated.resources.updated_yesterday
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import zed.rainxch.githubstore.core.domain.model.GithubRepoSummary
 import zed.rainxch.githubstore.core.domain.model.GithubUser
@@ -155,7 +161,7 @@ fun RepositoryCard(
             Spacer(Modifier.height(24.dp))
 
             GithubStoreButton(
-                text = "View Details",
+                text = stringResource(Res.string.home_view_details),
                 onClick = onClick,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -187,9 +193,9 @@ fun InstallStatusBadge(
     }
 
     val text = if (isUpdateAvailable) {
-        "Update Available"
+        stringResource(Res.string.update_available)
     } else {
-        "Installed"
+        stringResource(Res.string.installed)
     }
 
     Surface(

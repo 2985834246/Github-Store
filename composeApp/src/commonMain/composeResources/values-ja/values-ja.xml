@@ -27,7 +27,7 @@
     <string name="updating_x_of_y">%2$d 件中 %1$d 件を更新中</string>
     <string name="currently_updating">現在：%1$s</string>
 
-    <string name="percent">%1$d%%</string>
+    <string name="percent">%1$d%</string>
 
     <string name="waiting_for_authorization">認証を待機中…</string>
     <string name="signed_in">ログイン完了！</string>
@@ -162,5 +162,31 @@
     <string name="error_generic">エラー: %1$s</string>
     <string name="error_asset_not_supported">ファイル形式 .%1$s は未対応です</string>
     <string name="error_file_not_found">ダウンロードしたファイルが見つかりません</string>
+
+    <string name="home_category_trending">トレンド</string>
+    <string name="home_category_new">新着</string>
+    <string name="home_category_recently_updated">最近更新</string>
+
+    <string name="home_finding_repositories">リポジトリを検索中…</string>
+    <string name="home_loading_more">読み込み中…</string>
+    <string name="home_no_more_repositories">これ以上ありません</string>
+    <string name="home_retry">再試行</string>
+    <string name="home_failed_to_load_repositories">リポジトリの読み込みに失敗しました</string>
+    <string name="home_view_details">詳細を見る</string>
+
+    <string name="updated_just_now">たった今更新</string>
+    <string name="updated_hours_ago">%1$d時間前に更新</string>
+    <string name="updated_yesterday">昨日更新</string>
+    <string name="updated_days_ago">%1$d日前に更新</string>
+    <string name="updated_on_date">%1$s に更新</string>
+
+    <string name="rate_limit_exceeded">レート制限を超えました</string>
+    <string name="rate_limit_used_all">%1$d 件のAPIリクエストをすべて使用しました。</string>
+    <string name="rate_limit_used_all_free">%1$d 件の無料APIリクエストをすべて使用しました。</string>
+    <string name="rate_limit_resets_in_minutes">%1$d分後にリセット</string>
+    <string name="rate_limit_tip_sign_in">💡 サインインすると、1時間あたり5,000件のリクエストが可能です。</string>
+    <string name="rate_limit_sign_in">サインイン</string>
+    <string name="rate_limit_ok">OK</string>
+    <string name="rate_limit_close">閉じる</string>
 
 </resources>

@@ -17,6 +17,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import githubstore.composeapp.generated.resources.Res
+import githubstore.composeapp.generated.resources.rate_limit_close
+import githubstore.composeapp.generated.resources.rate_limit_exceeded
+import githubstore.composeapp.generated.resources.rate_limit_ok
+import githubstore.composeapp.generated.resources.rate_limit_resets_in_minutes
+import githubstore.composeapp.generated.resources.rate_limit_sign_in
+import githubstore.composeapp.generated.resources.rate_limit_tip_sign_in
+import githubstore.composeapp.generated.resources.rate_limit_used_all
+import githubstore.composeapp.generated.resources.rate_limit_used_all_free
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import zed.rainxch.githubstore.core.presentation.theme.GithubStoreTheme
 import zed.rainxch.githubstore.network.RateLimitInfo
@@ -43,7 +53,7 @@ fun RateLimitDialog(
         },
         title = {
             Text(
-                text = "Rate Limit Exceeded",
+                text = stringResource(Res.string.rate_limit_exceeded),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Black,
                 color = MaterialTheme.colorScheme.onSurface
@@ -55,16 +65,25 @@ fun RateLimitDialog(
             ) {
                 Text(
                     text = if (isAuthenticated) {
-                        "You've used all ${rateLimitInfo?.limit} API requests."
+                        stringResource(
+                            Res.string.rate_limit_used_all,
+                            rateLimitInfo?.limit ?: 0
+                        )
                     } else {
-                        "You've used all ${rateLimitInfo?.limit} free API requests."
+                        stringResource(
+                            Res.string.rate_limit_used_all_free,
+                            rateLimitInfo?.limit ?: 0
+                        )
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.outline
                 )
 
                 Text(
-                    text = "Resets in $timeUntilReset minutes",
+                    text = stringResource(
+                        Res.string.rate_limit_resets_in_minutes,
+                        timeUntilReset ?: 0
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -73,7 +92,7 @@ fun RateLimitDialog(
                 if (!isAuthenticated) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "💡 Sign in to get 5,000 requests per hour instead of 60!",
+                        text = stringResource(Res.string.rate_limit_tip_sign_in),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -84,7 +103,7 @@ fun RateLimitDialog(
             if (!isAuthenticated) {
                 Button(onClick = onSignIn) {
                     Text(
-                        text = "Sign In",
+                        text = stringResource(Res.string.rate_limit_sign_in),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
@@ -92,7 +111,7 @@ fun RateLimitDialog(
             } else {
                 Button(onClick = onDismiss) {
                     Text(
-                        text = "OK",
+                        text = stringResource(Res.string.rate_limit_ok),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -102,7 +121,7 @@ fun RateLimitDialog(
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(
-                    text = "Close",
+                    text = stringResource(Res.string.rate_limit_close),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurface
                 )

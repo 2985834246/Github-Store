@@ -27,7 +27,7 @@
     <string name="updating_x_of_y">Обновление %1$d из %2$d</string>
     <string name="currently_updating">Сейчас: %1$s</string>
 
-    <string name="percent">%1$d%%</string>
+    <string name="percent">%1$d%</string>
 
     <string name="waiting_for_authorization">Ожидание авторизации…</string>
     <string name="signed_in">Вход выполнен!</string>
@@ -174,5 +174,32 @@
     <string name="error_generic">Ошибка: %1$s</string>
     <string name="error_asset_not_supported">Тип файла .%1$s не поддерживается</string>
     <string name="error_file_not_found">Загруженный файл не найден</string>
+
+    <string name="home_category_trending">В тренде</string>
+    <string name="home_category_new">Новые</string>
+    <string name="home_category_recently_updated">Недавно обновлённые</string>
+
+    <string name="home_finding_repositories">Поиск репозиториев...</string>
+    <string name="home_loading_more">Загрузка...</string>
+    <string name="home_no_more_repositories">Больше репозиториев нет</string>
+    <string name="home_retry">Повторить</string>
+    <string name="home_failed_to_load_repositories">Не удалось загрузить репозитории</string>
+    <string name="home_view_details">Подробнее</string>
+
+    <string name="updated_just_now">обновлено только что</string>
+    <string name="updated_hours_ago">обновлено %1$d ч. назад</string>
+    <string name="updated_yesterday">обновлено вчера</string>
+    <string name="updated_days_ago">обновлено %1$d дн. назад</string>
+    <string name="updated_on_date">обновлено %1$s</string>
+
+    <string name="rate_limit_exceeded">Превышен лимит запросов</string>
+    <string name="rate_limit_used_all">Вы использовали все %1$d API-запросов.</string>
+    <string name="rate_limit_used_all_free">Вы использовали все %1$d бесплатных API-запросов.</string>
+    <string name="rate_limit_resets_in_minutes">Сброс через %1$d мин</string>
+    <string name="rate_limit_tip_sign_in">💡 Войдите, чтобы получить 5 000 запросов в час вместо 60!</string>
+    <string name="rate_limit_sign_in">Войти</string>
+    <string name="rate_limit_ok">ОК</string>
+    <string name="rate_limit_close">Закрыть</string>
+
 
 </resources>

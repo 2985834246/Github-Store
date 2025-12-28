@@ -50,7 +50,16 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import githubstore.composeapp.generated.resources.Res
 import githubstore.composeapp.generated.resources.app_icon
+import githubstore.composeapp.generated.resources.app_name
+import githubstore.composeapp.generated.resources.home_finding_repositories
+import githubstore.composeapp.generated.resources.home_loading_more
+import githubstore.composeapp.generated.resources.home_no_more_repositories
+import githubstore.composeapp.generated.resources.home_retry
+import githubstore.composeapp.generated.resources.installed_apps
+import githubstore.composeapp.generated.resources.search_repositories_hint
+import githubstore.composeapp.generated.resources.settings_title
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import zed.rainxch.githubstore.core.presentation.components.GithubStoreButton
@@ -141,7 +150,7 @@ fun HomeScreen(
                 },
                 title = {
                     Text(
-                        text = "Github Store",
+                        text = stringResource(Res.string.app_name),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                         fontWeight = FontWeight.Black,
@@ -197,7 +206,7 @@ fun HomeScreen(
                             Spacer(modifier = Modifier.height(8.dp))
 
                             Text(
-                                text = "Finding repositories...",
+                                text = stringResource(Res.string.home_finding_repositories),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
@@ -223,7 +232,7 @@ fun HomeScreen(
                             Spacer(modifier = Modifier.height(8.dp))
 
                             GithubStoreButton(
-                                text = "Retry",
+                                text = stringResource(Res.string.home_retry),
                                 onClick = {
                                     onAction(HomeAction.Retry)
                                 }
@@ -276,7 +285,7 @@ fun HomeScreen(
                                         Spacer(modifier = Modifier.width(8.dp))
 
                                         Text(
-                                            text = "Loading more...",
+                                            text = stringResource(Res.string.home_loading_more),
                                             style = MaterialTheme.typography.titleMedium,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         )
@@ -285,11 +294,10 @@ fun HomeScreen(
                             }
                         }
 
-                        // End message
                         if (!state.hasMorePages && !state.isLoadingMore) {
                             item(key = "end_message") {
                                 Text(
-                                    text = "No more repositories",
+                                    text = stringResource(Res.string.home_no_more_repositories),
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(16.dp),
@@ -327,7 +335,7 @@ private fun topbarActions(
         ) {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search",
+                contentDescription = stringResource(Res.string.search_repositories_hint),
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -348,7 +356,7 @@ private fun topbarActions(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Apps,
-                        contentDescription = "Apps",
+                        contentDescription = stringResource(Res.string.installed_apps),
                         modifier = Modifier.size(24.dp)
                     )
 
@@ -377,7 +385,7 @@ private fun topbarActions(
         ) {
             Icon(
                 imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
+                contentDescription = stringResource(Res.string.settings_title),
                 modifier = Modifier.size(24.dp)
             )
         }

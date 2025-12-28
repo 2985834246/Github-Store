@@ -1,13 +1,21 @@
 package zed.rainxch.githubstore.core.presentation.utils
 
+import androidx.compose.runtime.Composable
+import githubstore.composeapp.generated.resources.Res
+import githubstore.composeapp.generated.resources.updated_days_ago
+import githubstore.composeapp.generated.resources.updated_hours_ago
+import githubstore.composeapp.generated.resources.updated_just_now
+import githubstore.composeapp.generated.resources.updated_yesterday
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
+@Composable
 fun formatUpdatedAt(isoInstant: String): String {
     val updated = Instant.parse(isoInstant)
     val now = Instant.fromEpochMilliseconds(Clock.System.now().toEpochMilliseconds())
@@ -17,10 +25,10 @@ fun formatUpdatedAt(isoInstant: String): String {
     val daysDiff = diff.inWholeDays
 
     return when {
-        hoursDiff < 1 -> "updated just now"
-        hoursDiff < 24 -> "updated ${hoursDiff} hour${if (hoursDiff == 1L) "" else "s"} ago"
-        daysDiff == 1L -> "updated yesterday"
-        daysDiff < 7 -> "updated ${daysDiff} day${if (daysDiff == 1L) "" else "s"} ago"
+        hoursDiff < 1 -> stringResource(Res.string.updated_just_now)
+        hoursDiff < 24 -> stringResource(Res.string.updated_hours_ago, hoursDiff)
+        daysDiff == 1L -> stringResource(Res.string.updated_yesterday)
+        daysDiff < 7 -> stringResource(Res.string.updated_days_ago, daysDiff)
         else -> {
             val date = updated.toLocalDateTime(TimeZone.currentSystemDefault()).date
             "updated on $date"
