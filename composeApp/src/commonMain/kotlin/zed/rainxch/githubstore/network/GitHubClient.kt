@@ -1,6 +1,8 @@
 package zed.rainxch.githubstore.network
 
 import co.touchlab.kermit.Logger
+import githubstore.composeapp.generated.resources.Res
+import githubstore.composeapp.generated.resources.rate_limit_exceeded
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -17,6 +19,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.jetbrains.compose.resources.getString
 import zed.rainxch.githubstore.core.data.data_source.TokenDataSource
 
 fun buildGitHubHttpClient(
@@ -83,15 +86,19 @@ fun buildAuthedGitHubHttpClient(
         rateLimitHandler = rateLimitHandler
     )
 
-fun HttpResponse.checkRateLimit(rateLimitHandler: RateLimitHandler?) {
+suspend fun HttpResponse.checkRateLimit(rateLimitHandler: RateLimitHandler?) {
     rateLimitHandler?.updateFromHeaders(headers)
 
     if (status.value == 403) {
         val rateLimitInfo = RateLimitInfo.fromHeaders(headers)
         if (rateLimitInfo != null && rateLimitInfo.isExhausted) {
-            throw RateLimitException(rateLimitInfo)
+            throw RateLimitException(rateLimitInfo, getString(Res.string.rate_limit_exceeded))
         }
     }
+}
+
+suspend fun getErrorString(): String {
+    return getString(Res.string.rate_limit_exceeded)
 }
 
 suspend inline fun <reified T> HttpClient.safeApiCall(
@@ -109,7 +116,7 @@ suspend inline fun <reified T> HttpClient.safeApiCall(
                 return Result.failure(
                     exception = RateLimitException(
                         rateLimitInfo = rateLimitHandler.getCurrentRateLimit()!!,
-                        message = "Rate limit exceeded. Try again later or sign in for higher limits."
+                        getErrorString()
                     )
                 )
             }

@@ -39,7 +39,7 @@ data class RateLimitInfo(
 
 class RateLimitException(
     val rateLimitInfo: RateLimitInfo,
-    message: String = "GitHub API rate limit exceeded"
+    message: String
 ) : Exception(message)
 
 class RateLimitHandler {
