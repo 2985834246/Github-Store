@@ -4,38 +4,38 @@ import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import githubstore.composeapp.generated.resources.Inter_24pt_Black
-import githubstore.composeapp.generated.resources.Inter_24pt_Bold
-import githubstore.composeapp.generated.resources.Inter_24pt_Light
-import githubstore.composeapp.generated.resources.Inter_24pt_Medium
-import githubstore.composeapp.generated.resources.Inter_24pt_Regular
-import githubstore.composeapp.generated.resources.Inter_24pt_SemiBold
-import githubstore.composeapp.generated.resources.JetBrainsMono_Bold
-import githubstore.composeapp.generated.resources.JetBrainsMono_Light
-import githubstore.composeapp.generated.resources.JetBrainsMono_Medium
-import githubstore.composeapp.generated.resources.JetBrainsMono_Regular
-import githubstore.composeapp.generated.resources.JetBrainsMono_SemiBold
+import githubstore.composeapp.generated.resources.inter_black
+import githubstore.composeapp.generated.resources.inter_bold
+import githubstore.composeapp.generated.resources.inter_light
+import githubstore.composeapp.generated.resources.inter_medium
+import githubstore.composeapp.generated.resources.inter_regular
+import githubstore.composeapp.generated.resources.inter_semi_bold
+import githubstore.composeapp.generated.resources.jetbrains_mono_bold
+import githubstore.composeapp.generated.resources.jetbrains_mono_light
+import githubstore.composeapp.generated.resources.jetbrains_mono_medium
+import githubstore.composeapp.generated.resources.jetbrains_mono_regular
+import githubstore.composeapp.generated.resources.jetbrains_mono_semi_bold
 import githubstore.composeapp.generated.resources.Res
 import org.jetbrains.compose.resources.Font
 import zed.rainxch.githubstore.core.presentation.model.FontTheme
 
 val jetbrainsMonoFontFamily
     @Composable get() = FontFamily(
-        Font(Res.font.JetBrainsMono_Light, FontWeight.Light),
-        Font(Res.font.JetBrainsMono_Regular, FontWeight.Normal),
-        Font(Res.font.JetBrainsMono_Medium, FontWeight.Medium),
-        Font(Res.font.JetBrainsMono_SemiBold, FontWeight.SemiBold),
-        Font(Res.font.JetBrainsMono_Bold, FontWeight.Bold),
+        Font(Res.font.jetbrains_mono_light, FontWeight.Light),
+        Font(Res.font.jetbrains_mono_regular, FontWeight.Normal),
+        Font(Res.font.jetbrains_mono_medium, FontWeight.Medium),
+        Font(Res.font.jetbrains_mono_semi_bold, FontWeight.SemiBold),
+        Font(Res.font.jetbrains_mono_bold, FontWeight.Bold),
     )
 
 val interFontFamily
     @Composable get() = FontFamily(
-        Font(Res.font.Inter_24pt_Light, FontWeight.Light),
-        Font(Res.font.Inter_24pt_Regular, FontWeight.Normal),
-        Font(Res.font.Inter_24pt_Medium, FontWeight.Medium),
-        Font(Res.font.Inter_24pt_SemiBold, FontWeight.SemiBold),
-        Font(Res.font.Inter_24pt_Bold, FontWeight.Bold),
-        Font(Res.font.Inter_24pt_Black, FontWeight.Black),
+        Font(Res.font.inter_light, FontWeight.Light),
+        Font(Res.font.inter_regular, FontWeight.Normal),
+        Font(Res.font.inter_medium, FontWeight.Medium),
+        Font(Res.font.inter_semi_bold, FontWeight.SemiBold),
+        Font(Res.font.inter_bold, FontWeight.Bold),
+        Font(Res.font.inter_black, FontWeight.Black),
     )
 
 val baseline = Typography()
