@@ -27,6 +27,7 @@ import org.koin.core.parameter.parametersOf
 import zed.rainxch.githubstore.feature.apps.presentation.AppsRoot
 import zed.rainxch.githubstore.feature.auth.presentation.AuthenticationRoot
 import zed.rainxch.githubstore.feature.details.presentation.DetailsRoot
+import zed.rainxch.githubstore.feature.favourites.FavouritesRoot
 import zed.rainxch.githubstore.feature.home.presentation.HomeRoot
 import zed.rainxch.githubstore.feature.search.presentation.SearchRoot
 import zed.rainxch.githubstore.feature.settings.presentation.SettingsRoot
@@ -110,6 +111,10 @@ fun AppNavigation(
                                 navBackStack.add(GithubStoreGraph.HomeScreen)
                             }
                         )
+                    }
+
+                    entry<GithubStoreGraph.FavouritesScreen> {
+                        FavouritesRoot()
                     }
 
                     entry<GithubStoreGraph.SettingsScreen> {

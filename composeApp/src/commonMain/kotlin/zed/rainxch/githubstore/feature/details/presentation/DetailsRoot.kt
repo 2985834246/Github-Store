@@ -38,8 +38,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import githubstore.composeapp.generated.resources.Res
+import githubstore.composeapp.generated.resources.added_to_favourites
 import githubstore.composeapp.generated.resources.navigate_back
 import githubstore.composeapp.generated.resources.open_repository
+import githubstore.composeapp.generated.resources.removed_from_favourites
 import io.github.fletchmckee.liquid.LiquidState
 import io.github.fletchmckee.liquid.liquefiable
 import io.github.fletchmckee.liquid.liquid
@@ -216,7 +218,7 @@ private fun DetailsTopbar(
             }
         },
         actions = {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -231,10 +233,16 @@ private fun DetailsTopbar(
                         )
                     ) {
                         Icon(
-                            imageVector = if(state.isFavorite) {
+                            imageVector = if (state.isFavorite) {
                                 Icons.Default.Favorite
                             } else Icons.Default.FavoriteBorder,
-                            contentDescription = null,
+                            contentDescription = stringResource(
+                                resource = if (state.isFavorite) {
+                                    Res.string.added_to_favourites
+                                } else {
+                                    Res.string.removed_from_favourites
+                                }
+                            ),
                         )
                     }
                 }

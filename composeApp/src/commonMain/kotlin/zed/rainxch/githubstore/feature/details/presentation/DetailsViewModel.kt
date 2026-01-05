@@ -94,6 +94,7 @@ class DetailsViewModel(
                     try {
                         favoritesRepository.isFavoriteSync(repo.id)
                     } catch (t: Throwable) {
+                        Logger.e { "Failed to load if repo is favourite: ${t.localizedMessage}" }
                         false
                     }
                 }

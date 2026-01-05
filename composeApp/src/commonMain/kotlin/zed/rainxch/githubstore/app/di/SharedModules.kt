@@ -5,7 +5,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import zed.rainxch.githubstore.MainViewModel
 import zed.rainxch.githubstore.app.app_state.AppStateManager
@@ -25,7 +24,6 @@ import zed.rainxch.githubstore.feature.apps.domain.repository.AppsRepository
 import zed.rainxch.githubstore.feature.apps.presentation.AppsViewModel
 import zed.rainxch.githubstore.network.buildAuthedGitHubHttpClient
 import zed.rainxch.githubstore.feature.auth.data.repository.AuthenticationRepositoryImpl
-import zed.rainxch.githubstore.feature.auth.domain.*
 import zed.rainxch.githubstore.feature.auth.domain.repository.AuthenticationRepository
 import zed.rainxch.githubstore.feature.auth.presentation.AuthenticationViewModel
 import zed.rainxch.githubstore.feature.details.data.repository.DetailsRepositoryImpl
@@ -34,6 +32,7 @@ import zed.rainxch.githubstore.feature.details.presentation.DetailsViewModel
 import zed.rainxch.githubstore.core.data.services.Downloader
 import zed.rainxch.githubstore.core.data.services.Installer
 import zed.rainxch.githubstore.core.domain.use_cases.SyncInstalledAppsUseCase
+import zed.rainxch.githubstore.feature.favourites.FavouritesViewModel
 import zed.rainxch.githubstore.feature.home.data.data_source.CachedTrendingDataSource
 import zed.rainxch.githubstore.feature.home.data.repository.HomeRepositoryImpl
 import zed.rainxch.githubstore.feature.home.domain.repository.HomeRepository
@@ -195,6 +194,12 @@ val searchModule: Module = module {
             installedAppsRepository = get(),
             syncInstalledAppsUseCase = get()
         )
+    }
+}
+val favouritesModule: Module = module {
+    // ViewModel
+    viewModel {
+        FavouritesViewModel()
     }
 }
 
