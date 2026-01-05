@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import githubstore.composeapp.generated.resources.Res
 import githubstore.composeapp.generated.resources.enter_code_on_github
-import githubstore.composeapp.generated.resources.error_cancelled
 import githubstore.composeapp.generated.resources.error_unknown
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -120,15 +119,7 @@ class AuthenticationViewModel(
                 }
 
             } catch (e: CancellationException) {
-                withContext(Dispatchers.Main.immediate) {
-                    _state.update {
-                        it.copy(
-                            loginState = AuthLoginState.Error(
-                                getString(Res.string.error_cancelled)
-                            )
-                        )
-                    }
-                }
+                throw e
             } catch (t: Throwable) {
                 withContext(Dispatchers.Main.immediate) {
                     _state.update {
@@ -157,21 +148,24 @@ class AuthenticationViewModel(
     private fun copyCode(start: DeviceStart) {
         viewModelScope.launch(Dispatchers.Main.immediate) {
             try {
+                clipboardHelper.copy(
+                    label = "GitHub Code",
+                    text = start.userCode
+                )
+
                 _state.update {
                     it.copy(
                         loginState = AuthLoginState.DevicePrompt(start),
                         copied = true
                     )
                 }
-
-                clipboardHelper.copy(
-                    label = "GitHub Code",
-                    text = start.userCode
-                )
             } catch (e: Exception) {
                 Logger.d { "⚠️ Failed to copy to clipboard: ${e.message}" }
                 _state.update {
-                    it.copy(copied = false)
+                    it.copy(
+                        loginState = AuthLoginState.DevicePrompt(start),
+                        copied = false
+                    )
                 }
             }
         }

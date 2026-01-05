@@ -15,6 +15,10 @@ import zed.rainxch.githubstore.feature.auth.data.network.GitHubAuthApi
 import zed.rainxch.githubstore.feature.auth.data.getGithubClientId
 import zed.rainxch.githubstore.feature.auth.domain.repository.AuthenticationRepository
 
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import java.util.concurrent.TimeoutException
+
 class AuthenticationRepositoryImpl(
     private val tokenDataSource: TokenDataSource,
 ) : AuthenticationRepository {
@@ -67,7 +71,7 @@ class AuthenticationRepositoryImpl(
 
             while (isActive) {
                 if (System.currentTimeMillis() - startTime >= timeoutMs) {
-                    throw CancellationException(
+                    throw TimeoutException(
                         "Authentication timed out after ${start.expiresInSec} seconds. Please try again."
                     )
                 }
@@ -116,7 +120,7 @@ class AuthenticationRepositoryImpl(
                         }
 
                         "access_denied" in errorMsg -> {
-                            throw CancellationException(
+                            throw Exception(
                                 "Authentication was denied. Please try again if this was a mistake."
                             )
                         }
@@ -124,7 +128,7 @@ class AuthenticationRepositoryImpl(
                         "expired_token" in errorMsg ||
                                 "expired_device_code" in errorMsg ||
                                 "token_expired" in errorMsg -> {
-                            throw CancellationException(
+                            throw Exception(
                                 "Authorization code expired. Please try again."
                             )
                         }
@@ -175,6 +179,8 @@ class AuthenticationRepositoryImpl(
 
                 } catch (e: CancellationException) {
                     throw e
+                } catch (e: TimeoutException) {
+                    throw e
                 } catch (e: Exception) {
                     consecutiveUnknownErrors++
                     Logger.d { "❌ Unexpected error ($consecutiveUnknownErrors/5): ${e.message}" }
@@ -209,6 +215,8 @@ class AuthenticationRepositoryImpl(
                         throw Exception("Token was not persisted correctly after 5 attempts")
                     }
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Logger.d { "⚠️ Token save failed (attempt ${attempt + 1}/5): ${e.message}" }
                 if (attempt == 4) {
@@ -232,23 +240,4 @@ class AuthenticationRepositoryImpl(
                 errorMsg.contains("host unreachable") ||
                 errorMsg.contains("network error")
     }
-}
-
-private suspend fun <T> withRetry(
-    maxAttempts: Int = 3,
-    initialDelay: Long = 1000,
-    maxDelay: Long = 5000,
-    block: suspend () -> T
-): T {
-    var currentDelay = initialDelay
-    repeat(maxAttempts - 1) { attempt ->
-        try {
-            return block()
-        } catch (e: Exception) {
-            Logger.d { "⚠️ Retry attempt ${attempt + 1} failed: ${e.message}" }
-            delay(currentDelay)
-            currentDelay = minOf(currentDelay * 2, maxDelay)
-        }
-    }
-    return block()
 }
