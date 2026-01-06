@@ -149,7 +149,7 @@ fun RepositoryCard(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.bodyLarge,
-                        softWrap = false
+                        softWrap = true
                     )
                 }
 

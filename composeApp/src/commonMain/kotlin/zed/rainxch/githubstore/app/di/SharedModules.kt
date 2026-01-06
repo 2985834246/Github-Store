@@ -201,7 +201,9 @@ val searchModule: Module = module {
 val favouritesModule: Module = module {
     // ViewModel
     viewModel {
-        FavouritesViewModel()
+        FavouritesViewModel(
+            favouritesRepository = get()
+        )
     }
 }
 

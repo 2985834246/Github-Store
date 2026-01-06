@@ -66,7 +66,7 @@ import zed.rainxch.githubstore.feature.details.presentation.utils.isLiquidTopbar
 
 @Composable
 fun DetailsRoot(
-    onOpenRepositoryInApp: (repoId: Int) -> Unit,
+    onOpenRepositoryInApp: (repoId: Long) -> Unit,
     onNavigateBack: () -> Unit,
     viewModel: DetailsViewModel = koinViewModel()
 ) {

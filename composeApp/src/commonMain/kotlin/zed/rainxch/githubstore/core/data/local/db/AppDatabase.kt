@@ -5,10 +5,8 @@ import androidx.room.RoomDatabase
 import zed.rainxch.githubstore.core.data.local.db.dao.FavoriteRepoDao
 import zed.rainxch.githubstore.core.data.local.db.dao.InstalledAppDao
 import zed.rainxch.githubstore.core.data.local.db.dao.UpdateHistoryDao
-import zed.rainxch.githubstore.core.data.local.db.entities.DeveloperApp
 import zed.rainxch.githubstore.core.data.local.db.entities.FavoriteRepo
 import zed.rainxch.githubstore.core.data.local.db.entities.InstalledApp
-import zed.rainxch.githubstore.core.data.local.db.entities.SubscribedDeveloper
 import zed.rainxch.githubstore.core.data.local.db.entities.UpdateHistory
 
 @Database(

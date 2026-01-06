@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -170,7 +171,7 @@ fun SettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun TopAppBar(onAction: (SettingsAction) -> Unit) {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         navigationIcon = {
             IconButton(
                 shapes = IconButtonDefaults.shapes(),
@@ -188,7 +189,7 @@ private fun TopAppBar(onAction: (SettingsAction) -> Unit) {
         title = {
             Text(
                 text = stringResource(Res.string.settings_title),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMediumEmphasized,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }

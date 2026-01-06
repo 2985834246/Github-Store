@@ -78,7 +78,6 @@ class AppsViewModel(
             _state.update { it.copy(isLoading = true) }
 
             try {
-                // Sync system state using shared use case
                 val syncResult = syncInstalledAppsUseCase()
                 if (syncResult.isFailure) {
                     Logger.w { "Sync had issues but continuing: ${syncResult.exceptionOrNull()?.message}" }
@@ -131,29 +130,35 @@ class AppsViewModel(
                         if (platform.type == PlatformType.ANDROID) {
                             val systemInfo = packageMonitor.getInstalledPackageInfo(app.packageName)
                             if (systemInfo != null) {
-                                installedAppsRepository.updateApp(app.copy(
-                                    installedVersionName = systemInfo.versionName,
-                                    installedVersionCode = systemInfo.versionCode,
-                                    latestVersionName = systemInfo.versionName,
-                                    latestVersionCode = systemInfo.versionCode
-                                ))
+                                installedAppsRepository.updateApp(
+                                    app.copy(
+                                        installedVersionName = systemInfo.versionName,
+                                        installedVersionCode = systemInfo.versionCode,
+                                        latestVersionName = systemInfo.versionName,
+                                        latestVersionCode = systemInfo.versionCode
+                                    )
+                                )
                                 Logger.d { "Migrated ${app.packageName}: set versionName/code from system" }
                             } else {
-                                installedAppsRepository.updateApp(app.copy(
+                                installedAppsRepository.updateApp(
+                                    app.copy(
+                                        installedVersionName = app.installedVersion,
+                                        installedVersionCode = 0L,
+                                        latestVersionName = app.installedVersion,
+                                        latestVersionCode = 0L
+                                    )
+                                )
+                                Logger.d { "Migrated ${app.packageName}: fallback to tag as versionName" }
+                            }
+                        } else {
+                            installedAppsRepository.updateApp(
+                                app.copy(
                                     installedVersionName = app.installedVersion,
                                     installedVersionCode = 0L,
                                     latestVersionName = app.installedVersion,
                                     latestVersionCode = 0L
-                                ))
-                                Logger.d { "Migrated ${app.packageName}: fallback to tag as versionName" }
-                            }
-                        } else {
-                            installedAppsRepository.updateApp(app.copy(
-                                installedVersionName = app.installedVersion,
-                                installedVersionCode = 0L,
-                                latestVersionName = app.installedVersion,
-                                latestVersionCode = 0L
-                            ))
+                                )
+                            )
                             Logger.d { "Migrated ${app.packageName} (desktop): fallback to tag as versionName" }
                         }
                     }
@@ -227,14 +232,26 @@ class AppsViewModel(
                     onCantLaunchApp = {
                         viewModelScope.launch {
                             _events.send(
-                                AppsEvent.ShowError(getString(Res.string.cannot_launch, arrayOf(app.appName)))
+                                AppsEvent.ShowError(
+                                    getString(
+                                        Res.string.cannot_launch,
+                                        arrayOf(app.appName)
+                                    )
+                                )
                             )
                         }
                     }
                 )
             } catch (e: Exception) {
                 Logger.e { "Failed to open app: ${e.message}" }
-                _events.send(AppsEvent.ShowError(getString(Res.string.failed_to_open, arrayOf(app.appName))))
+                _events.send(
+                    AppsEvent.ShowError(
+                        getString(
+                            Res.string.failed_to_open,
+                            arrayOf(app.appName)
+                        )
+                    )
+                )
             }
         }
     }
@@ -351,7 +368,14 @@ class AppsViewModel(
                     app.packageName,
                     UpdateState.Error(e.message ?: "Update failed")
                 )
-                _events.send(AppsEvent.ShowError(getString(Res.string.failed_to_update, arrayOf(app.appName, e.message?:""))))
+                _events.send(
+                    AppsEvent.ShowError(
+                        getString(
+                            Res.string.failed_to_update,
+                            arrayOf(app.appName, e.message ?: "")
+                        )
+                    )
+                )
             } finally {
                 activeUpdates.remove(app.packageName)
             }
@@ -413,7 +437,14 @@ class AppsViewModel(
                 Logger.d { "Update all cancelled" }
             } catch (e: Exception) {
                 Logger.e { "Update all failed: ${e.message}" }
-                _events.send(AppsEvent.ShowError(getString(Res.string.update_all_failed, arrayOf(e.message))))
+                _events.send(
+                    AppsEvent.ShowError(
+                        getString(
+                            Res.string.update_all_failed,
+                            arrayOf(e.message)
+                        )
+                    )
+                )
             } finally {
                 _state.update {
                     it.copy(

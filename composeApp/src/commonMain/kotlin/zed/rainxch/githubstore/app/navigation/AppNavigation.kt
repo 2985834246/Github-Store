@@ -64,7 +64,7 @@ fun AppNavigation(
                             onNavigateToDetails = { repo ->
                                 navBackStack.add(
                                     GithubStoreGraph.DetailsScreen(
-                                        repositoryId = repo.id.toInt()
+                                        repositoryId = repo.id
                                     )
                                 )
                             }
@@ -79,7 +79,7 @@ fun AppNavigation(
                             onNavigateToDetails = { repo ->
                                 navBackStack.add(
                                     GithubStoreGraph.DetailsScreen(
-                                        repositoryId = repo.id.toInt()
+                                        repositoryId = repo.id
                                     )
                                 )
                             }
@@ -114,7 +114,14 @@ fun AppNavigation(
                     }
 
                     entry<GithubStoreGraph.FavouritesScreen> {
-                        FavouritesRoot()
+                        FavouritesRoot(
+                            onNavigateBack = {
+                                navBackStack.removeLastOrNull()
+                            },
+                            onNavigateToDetails = {
+                                navBackStack.add(GithubStoreGraph.DetailsScreen(it))
+                            },
+                        )
                     }
 
                     entry<GithubStoreGraph.SettingsScreen> {
@@ -133,7 +140,7 @@ fun AppNavigation(
                             onNavigateToRepo = { repoId ->
                                 navBackStack.add(
                                     GithubStoreGraph.DetailsScreen(
-                                        repositoryId = repoId.toInt()
+                                        repositoryId = repoId
                                     )
                                 )
                             }

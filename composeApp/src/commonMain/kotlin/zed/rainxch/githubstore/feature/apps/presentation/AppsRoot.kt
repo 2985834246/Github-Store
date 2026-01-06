@@ -44,6 +44,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -139,7 +140,7 @@ fun AppsScreen(
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 navigationIcon = {
                     IconButton(
                         onClick = { onAction(AppsAction.OnNavigateBackClick) }
@@ -152,7 +153,9 @@ fun AppsScreen(
                 },
                 title = {
                     Text(
-                        text = stringResource(Res.string.installed_apps)
+                        text = stringResource(Res.string.installed_apps),
+                        style = MaterialTheme.typography.titleMediumEmphasized,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 actions = {

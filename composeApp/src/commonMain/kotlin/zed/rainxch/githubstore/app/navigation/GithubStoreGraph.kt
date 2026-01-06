@@ -16,7 +16,7 @@ sealed interface GithubStoreGraph: NavKey {
 
     @Serializable
     data class DetailsScreen(
-        val repositoryId: Int
+        val repositoryId: Long
     ) : GithubStoreGraph
 
     @Serializable

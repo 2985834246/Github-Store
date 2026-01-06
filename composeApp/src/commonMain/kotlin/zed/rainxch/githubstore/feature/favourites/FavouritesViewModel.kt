@@ -2,12 +2,27 @@ package zed.rainxch.githubstore.feature.favourites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import zed.rainxch.githubstore.core.data.local.db.entities.FavoriteRepo
+import zed.rainxch.githubstore.core.domain.repository.FavouritesRepository
+import zed.rainxch.githubstore.feature.favourites.mappers.toFavouriteRepositoryUi
+import zed.rainxch.githubstore.feature.favourites.model.FavouriteRepository
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-class FavouritesViewModel : ViewModel() {
+class FavouritesViewModel(
+    private val favouritesRepository: FavouritesRepository
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -15,7 +30,8 @@ class FavouritesViewModel : ViewModel() {
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                /** Load initial data here **/
+                loadFavouriteRepos()
+
                 hasLoadedInitialData = true
             }
         }
@@ -25,9 +41,52 @@ class FavouritesViewModel : ViewModel() {
             initialValue = FavouritesState()
         )
 
+    private fun loadFavouriteRepos() {
+        viewModelScope.launch {
+            favouritesRepository
+                .getAllFavorites()
+                .map { it.map { it.toFavouriteRepositoryUi() } }
+                .flowOn(Dispatchers.Default)
+                .collect { favoriteRepos ->
+                    _state.update { it.copy(
+                        favouriteRepositories = favoriteRepos.toImmutableList()
+                    ) }
+                }
+        }
+    }
+
+    @OptIn(ExperimentalTime::class)
     fun onAction(action: FavouritesAction) {
         when (action) {
-            else -> TODO("Handle actions")
+            FavouritesAction.OnNavigateBackClick -> {
+                // Handled in composable
+            }
+
+            is FavouritesAction.OnRepositoryClick -> {
+                // Handled in composable
+            }
+
+            is FavouritesAction.OnToggleFavorite -> {
+                viewModelScope.launch {
+                    val repo = action.favouriteRepository
+
+                    val favoriteRepo = FavoriteRepo(
+                        repoId = repo.repoId,
+                        repoName = repo.repoName,
+                        repoOwner = repo.repoOwner,
+                        repoOwnerAvatarUrl = repo.repoOwnerAvatarUrl,
+                        repoDescription = repo.repoDescription,
+                        primaryLanguage = repo.primaryLanguage,
+                        repoUrl = repo.repoUrl,
+                        latestVersion = repo.latestRelease,
+                        latestReleaseUrl = repo.latestReleaseUrl,
+                        addedAt = Clock.System.now().toEpochMilliseconds(),
+                        lastSyncedAt = Clock.System.now().toEpochMilliseconds()
+                    )
+
+                    favouritesRepository.toggleFavorite(favoriteRepo)
+                }
+            }
         }
     }
 
