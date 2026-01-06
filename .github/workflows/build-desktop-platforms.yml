@@ -139,17 +139,23 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-latest
+    container:
+      image: debian:12
 
     steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y curl git
+          # Install JDK 21
+          apt-get install -y wget apt-transport-https
+          wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | apt-key add -
+          echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | tee /etc/apt/sources.list.d/adoptium.list
+          apt-get update
+          apt-get install -y temurin-21-jdk
+
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: 'gradle'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
