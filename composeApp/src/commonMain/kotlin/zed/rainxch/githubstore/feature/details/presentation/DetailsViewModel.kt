@@ -559,17 +559,27 @@ class DetailsViewModel(
                 )
 
                 val existingFilePath = downloader.getDownloadedFilePath(assetName)
-
-                val filePath = if (existingFilePath != null) {
-                    Logger.d { "File already exists, skipping download: $existingFilePath" }
-                    appendLog(
-                        assetName = assetName,
-                        size = sizeBytes,
-                        tag = releaseTag,
-                        result = LogResult.Downloaded
-                    )
-                    existingFilePath
+                val validatedFilePath = if (existingFilePath != null) {
+                    val fileSize = downloader.getFileSize(existingFilePath)
+                    if (fileSize == sizeBytes) {
+                        Logger.d { "File already exists with correct size, skipping download: $existingFilePath" }
+                        appendLog(
+                            assetName = assetName,
+                            size = sizeBytes,
+                            tag = releaseTag,
+                            result = LogResult.Downloaded
+                        )
+                        existingFilePath
+                    } else {
+                        Logger.w { "Existing file size mismatch (expected: $sizeBytes, found: $fileSize), re-downloading" }
+                        downloader.cancelDownload(assetName)
+                        null
+                    }
                 } else {
+                    null
+                }
+
+                val filePath = validatedFilePath ?: run {
                     _state.value = _state.value.copy(downloadStage = DownloadStage.DOWNLOADING)
                     downloader.download(downloadUrl, assetName).collect { p ->
                         _state.value = _state.value.copy(downloadProgressPercent = p.percent)
@@ -580,6 +590,13 @@ class DetailsViewModel(
 
                     val downloadedPath = downloader.getDownloadedFilePath(assetName)
                         ?: throw IllegalStateException("Downloaded file not found")
+
+                    val downloadedSize = downloader.getFileSize(downloadedPath)
+                    if (downloadedSize != sizeBytes) {
+                        Logger.e { "Downloaded file size mismatch (expected: $sizeBytes, got: $downloadedSize)" }
+                        downloader.cancelDownload(assetName)
+                        throw IllegalStateException("Downloaded file size mismatch")
+                    }
 
                     appendLog(
                         assetName = assetName,

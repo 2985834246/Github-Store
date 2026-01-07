@@ -19,4 +19,5 @@ interface Downloader {
     suspend fun getLatestDownload(): DownloadedFile?
 
     suspend fun getLatestDownloadForAssets(assetNames: List<String>): DownloadedFile?
+    suspend fun getFileSize(filePath: String): Long?
 }

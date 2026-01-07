@@ -207,4 +207,18 @@ class AndroidDownloader(
                     }
                 }
         }
+
+    override suspend fun getFileSize(filePath: String): Long? = withContext(Dispatchers.IO) {
+        try {
+            val file = File(filePath)
+            if (file.exists() && file.isFile) {
+                file.length()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            Logger.e { "Failed to get file size for $filePath: ${e.message}" }
+            null
+        }
+    }
 }
