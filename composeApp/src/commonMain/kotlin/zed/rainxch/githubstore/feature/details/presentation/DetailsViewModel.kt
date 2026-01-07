@@ -84,6 +84,35 @@ class DetailsViewModel(
             try {
                 _state.value = _state.value.copy(isLoading = true, errorMessage = null)
 
+                launch(Dispatchers.IO) {
+                    try {
+                        val allFiles = downloader.listDownloadedFiles()
+                        if (allFiles.isNotEmpty()) {
+                            Logger.d { "Cleaning up ${allFiles.size} leftover files from previous session" }
+
+                            allFiles.forEach { file ->
+                                try {
+                                    val deleted = downloader.cancelDownload(file.fileName)
+                                    if (deleted) {
+                                        Logger.d { "✓ Cleaned up leftover file: ${file.fileName}" }
+                                    } else {
+                                        Logger.w { "✗ Failed to delete file: ${file.fileName}" }
+                                    }
+                                } catch (e: Exception) {
+                                    Logger.e { "✗ Error deleting ${file.fileName}: ${e.message}" }
+                                }
+                            }
+
+                            Logger.d { "Cleanup complete - all leftover files processed" }
+                        } else {
+                            Logger.d { "No leftover files to clean up" }
+                        }
+                    } catch (t: Throwable) {
+                        Logger.e { "Failed to cleanup leftover files: ${t.message}" }
+                    }
+                }
+
+
                 val syncResult = syncInstalledAppsUseCase()
                 if (syncResult.isFailure) {
                     Logger.w { "Sync had issues but continuing: ${syncResult.exceptionOrNull()?.message}" }
@@ -801,37 +830,8 @@ class DetailsViewModel(
     override fun onCleared() {
         super.onCleared()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            launch {
-                currentDownloadJob?.cancel()
-                currentDownloadJob = null
-            }
-
-            launch {
-                try {
-                    val allFiles = downloader.listDownloadedFiles()
-
-                    Logger.d { "Starting cleanup of ${allFiles.size} files" }
-
-                    allFiles.forEach { file ->
-                        try {
-                            val deleted = downloader.cancelDownload(file.fileName)
-                            if (deleted) {
-                                Logger.d { "✓ Cleaned up file on screen exit: ${file.fileName}" }
-                            } else {
-                                Logger.w { "✗ Failed to delete file: ${file.fileName}" }
-                            }
-                        } catch (e: Exception) {
-                            Logger.e { "✗ Error deleting ${file.fileName}: ${e.message}" }
-                        }
-                    }
-
-                    Logger.d { "Cleanup complete - all files processed" }
-                } catch (t: Throwable) {
-                    Logger.e { "Failed to cleanup downloads: ${t.message}" }
-                }
-            }
-        }
+        currentDownloadJob?.cancel()
+        currentDownloadJob = null
     }
 
     private companion object {
