@@ -20,12 +20,11 @@ modules:
       - install -D zed.rainxch.githubstore.desktop /app/share/applications/
       - mkdir -p /app/share/icons/hicolor/512x512/apps/
       - install -D app_icon.png /app/share/icons/hicolor/512x512/apps/zed.rainxch.githubstore.png
+      - mkdir -p /app/share/metainfo/
+      - install -D zed.rainxch.githubstore.appdata.xml /app/share/metainfo/zed.rainxch.githubstore.appdata.xml
     sources:
       - type: dir
-        path: bin/
-      - type: dir
-        path: lib/
-      - type: file
-        path: app_icon.png
-      - type: file
-        path: zed.rainxch.githubstore.desktop
+        path: .
+        skip:
+          - zed.rainxch.githubstore.yml
+          - manifest.yml

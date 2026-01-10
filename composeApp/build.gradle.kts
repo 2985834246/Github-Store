@@ -270,11 +270,13 @@ val flatpakSourceDir = layout.buildDirectory.dir("flatpak-source")
 val copyFlatpakBinary = tasks.register<Copy>("copyFlatpakBinary") {
     dependsOn("packageAppImage")
 
-    from(layout.buildDirectory.dir("compose/binaries/main/app/$appName"))
+    val appImageOutput = layout.buildDirectory.dir("compose/binaries/main/app/$appName")
+
+    from(appImageOutput)
     into(flatpakDir.map { it.asFile.resolve("build") })
 
     doFirst {
-        val targetDir = flatpakDir.get().asFile.resolve("build")
+        val targetDir = outputs.files.singleFile
         if (targetDir.exists()) {
             targetDir.deleteRecursively()
         }
@@ -285,7 +287,9 @@ val copyFlatpakBinary = tasks.register<Copy>("copyFlatpakBinary") {
 val copyFlatpakResources = tasks.register<Copy>("copyFlatpakResources") {
     dependsOn(copyFlatpakBinary)
 
-    from(layout.projectDirectory.dir("src/jvmMain/resources/flatpak")) {
+    val resourcesDir = layout.projectDirectory.dir("src/jvmMain/resources/flatpak")
+
+    from(resourcesDir) {
         include("manifest.yml", "*.desktop", "*.xml", "app_icon.png")
     }
     into(flatpakDir.map { it.asFile.resolve("build") })
@@ -298,11 +302,14 @@ tasks.register<Exec>("packageFlatpak") {
     group = "build"
     description = "Build Flatpak for Linux desktop (binary-based)"
 
-    workingDir(flatpakDir.map { it.asFile.resolve("build") })
+    val buildDir = flatpakDir.map { it.asFile.resolve("build") }
+    val repoDir = flatpakDir.map { it.asFile.resolve("repo") }
+
+    workingDir(buildDir)
     commandLine(
         "flatpak-builder",
         "--install-deps-from=flathub",
-        "--repo=${flatpakDir.get().asFile.resolve("repo").absolutePath}",
+        "--repo=${repoDir.get().absolutePath}",
         "--force-clean",
         "build/${appId}",
         "$appId.yml"
@@ -314,8 +321,10 @@ tasks.register<Exec>("exportFlatpak") {
     group = "build"
     description = "Export Flatpak bundle (binary-based)"
 
+    val versionName = appVersionName
+
     workingDir(flatpakDir)
-    commandLine("flatpak", "build-bundle", "repo", "github-store-${appVersionName}.flatpak", appId, "master")
+    commandLine("flatpak", "build-bundle", "repo", "github-store-${versionName}.flatpak", appId, "master")
 }
 
 tasks.register<Exec>("runFlatpak") {
@@ -323,19 +332,23 @@ tasks.register<Exec>("runFlatpak") {
     group = "run"
     description = "Run the Flatpak locally (binary-based)"
 
-    workingDir(flatpakDir.map { it.asFile.resolve("build") })
+    val buildDir = flatpakDir.map { it.asFile.resolve("build") }
+
+    workingDir(buildDir)
     commandLine("flatpak-builder", "--run", "build/${appId}", "${appId}.yml", "GitHub-Store")
 }
 
 // Source-based tasks for Flathub submission
 val copyFlatpakSourceResources = tasks.register<Copy>("copyFlatpakSourceResources") {
-    from(layout.projectDirectory.dir("src/jvmMain/resources/flatpak")) {
+    val resourcesDir = layout.projectDirectory.dir("src/jvmMain/resources/flatpak")
+
+    from(resourcesDir) {
         include("zed.rainxch.githubstore.yml", "*.desktop", "*.xml", "app_icon.png")
     }
     into(flatpakSourceDir.map { it.asFile.resolve("build") })
 
     doFirst {
-        val targetDir = flatpakSourceDir.get().asFile.resolve("build")
+        val targetDir = outputs.files.singleFile
         if (targetDir.exists()) {
             targetDir.deleteRecursively()
         }
@@ -346,11 +359,13 @@ val copyFlatpakSourceResources = tasks.register<Copy>("copyFlatpakSourceResource
 val copyGeneratedSources = tasks.register<Copy>("copyGeneratedSources") {
     dependsOn(copyFlatpakSourceResources)
 
-    from(layout.projectDirectory.file("generated-sources.json"))
+    val sourcesFile = layout.projectDirectory.file("generated-sources.json")
+
+    from(sourcesFile)
     into(flatpakSourceDir.map { it.asFile.resolve("build") })
 
     onlyIf {
-        layout.projectDirectory.file("generated-sources.json").asFile.exists()
+        sourcesFile.asFile.exists()
     }
 }
 
@@ -359,11 +374,14 @@ tasks.register<Exec>("packageFlatpakSource") {
     group = "build"
     description = "Build Flatpak for Linux desktop (source-based for submission)"
 
-    workingDir(flatpakSourceDir.map { it.asFile.resolve("build") })
+    val buildDir = flatpakSourceDir.map { it.asFile.resolve("build") }
+    val repoDir = flatpakSourceDir.map { it.asFile.resolve("repo") }
+
+    workingDir(buildDir)
     commandLine(
         "flatpak-builder",
         "--install-deps-from=flathub",
-        "--repo=${flatpakSourceDir.get().asFile.resolve("repo").absolutePath}",
+        "--repo=${repoDir.get().absolutePath}",
         "--force-clean",
         "build/${appId}",
         "$appId.yml"
@@ -375,8 +393,10 @@ tasks.register<Exec>("exportFlatpakSource") {
     group = "build"
     description = "Export Flatpak bundle (source-based)"
 
+    val versionName = appVersionName
+
     workingDir(flatpakSourceDir)
-    commandLine("flatpak", "build-bundle", "repo", "github-store-${appVersionName}-source.flatpak", appId, "master")
+    commandLine("flatpak", "build-bundle", "repo", "github-store-${versionName}-source.flatpak", appId, "master")
 }
 
 tasks.register<Exec>("runFlatpakSource") {
@@ -384,6 +404,8 @@ tasks.register<Exec>("runFlatpakSource") {
     group = "run"
     description = "Run the Flatpak locally (source-based)"
 
-    workingDir(flatpakSourceDir.map { it.asFile.resolve("build") })
+    val buildDir = flatpakSourceDir.map { it.asFile.resolve("build") }
+
+    workingDir(buildDir)
     commandLine("flatpak-builder", "--run", "build/${appId}", "${appId}.yml", "GitHub-Store")
 }
