@@ -9,7 +9,8 @@ finish-args:
   - --socket=x11
   - --socket=wayland
   - --device=dri
-  - --env=GDK_BACKEND=x11
+  - --filesystem=xdg-download
+  - --env=GDK_BACKEND=x11,wayland
 modules:
   - name: githubstore
     buildsystem: simple
