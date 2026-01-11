@@ -307,7 +307,7 @@ tasks.register<Exec>("packageFlatpak") {
 
     workingDir(buildDir)
     commandLine(
-        "flatpak-builder",
+        "/usr/bin/flatpak-builder",
         "--install-deps-from=flathub",
         "--repo=${repoDir.get().absolutePath}",
         "--force-clean",
@@ -325,7 +325,7 @@ tasks.register<Exec>("exportFlatpak") {
     val versionName = appVersionName
 
     workingDir(flatpakDir)
-    commandLine("flatpak", "build-bundle", "repo", "github-store-${versionName}.flatpak", appId, "master")
+    commandLine("/usr/bin/flatpak", "build-bundle", "repo", "github-store-${versionName}.flatpak", appId, "master")
 }
 
 tasks.register<Exec>("runFlatpak") {
@@ -336,7 +336,7 @@ tasks.register<Exec>("runFlatpak") {
     val buildDir = flatpakDir.map { it.asFile.resolve("build") }
 
     workingDir(buildDir)
-    commandLine("flatpak-builder", "--run", "build/${appId}", "${appId}.yml", "GitHub-Store")
+    commandLine("/usr/bin/flatpak-builder", "--run", "build/${appId}", "${appId}.yml", "GitHub-Store")
 }
 
 // Source-based tasks for Flathub submission
@@ -380,7 +380,7 @@ tasks.register<Exec>("packageFlatpakSource") {
 
     workingDir(buildDir)
     commandLine(
-        "flatpak-builder",
+        "/usr/bin/flatpak-builder",
         "--install-deps-from=flathub",
         "--repo=${repoDir.get().absolutePath}",
         "--force-clean",
@@ -397,7 +397,7 @@ tasks.register<Exec>("exportFlatpakSource") {
     val versionName = appVersionName
 
     workingDir(flatpakSourceDir)
-    commandLine("flatpak", "build-bundle", "repo", "github-store-${versionName}-source.flatpak", appId, "master")
+    commandLine("/usr/bin/flatpak", "build-bundle", "repo", "github-store-${versionName}-source.flatpak", appId, "master")
 }
 
 tasks.register<Exec>("runFlatpakSource") {
@@ -408,5 +408,5 @@ tasks.register<Exec>("runFlatpakSource") {
     val buildDir = flatpakSourceDir.map { it.asFile.resolve("build") }
 
     workingDir(buildDir)
-    commandLine("flatpak-builder", "--run", "build/${appId}", "${appId}.yml", "GitHub-Store")
+    commandLine("/usr/bin/flatpak-builder", "--run", "build/${appId}", "${appId}.yml", "GitHub-Store")
 }
