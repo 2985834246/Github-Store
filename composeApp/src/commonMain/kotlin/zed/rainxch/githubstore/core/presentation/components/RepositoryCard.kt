@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.OpenInBrowser
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -69,15 +70,27 @@ fun RepositoryCard(
         shape = RoundedCornerShape(24.dp)
     ) {
         Box {
-            if(discoveryRepository.isFavourite) {
+            if (discoveryRepository.isFavourite) {
                 Icon(
                     imageVector = Icons.Default.Favorite,
                     contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
                     modifier = Modifier
-                        .size(128.dp)
+                        .size(120.dp)
                         .align(Alignment.BottomStart)
-                        .offset(x = -(32).dp, y = 32.dp),
-                    tint = MaterialTheme.colorScheme.primary.copy(alpha = .1f),
+                        .offset(x = (-32).dp, y = 32.dp)
+                )
+            }
+
+            if (discoveryRepository.isStarred) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary.copy(alpha = 0.08f),
+                    modifier = Modifier
+                        .size(120.dp)
+                        .align(Alignment.TopEnd)
+                        .offset(x = 32.dp, y = (-32).dp)
                 )
             }
 
@@ -326,7 +339,8 @@ fun RepositoryCardPreview() {
                 ),
                 isUpdateAvailable = true,
                 isFavourite = true,
-                isInstalled = true
+                isInstalled = true,
+                isStarred = false
             ),
             onClick = { },
         )

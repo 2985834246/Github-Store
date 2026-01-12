@@ -20,6 +20,7 @@ import zed.rainxch.githubstore.core.domain.Platform
 import zed.rainxch.githubstore.core.domain.model.PlatformType
 import zed.rainxch.githubstore.core.domain.repository.FavouritesRepository
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
+import zed.rainxch.githubstore.core.domain.repository.StarredRepository
 import zed.rainxch.githubstore.core.domain.use_cases.SyncInstalledAppsUseCase
 import zed.rainxch.githubstore.core.presentation.model.DiscoveryRepository
 import zed.rainxch.githubstore.feature.home.domain.repository.HomeRepository
@@ -30,7 +31,8 @@ class HomeViewModel(
     private val installedAppsRepository: InstalledAppsRepository,
     private val platform: Platform,
     private val syncInstalledAppsUseCase: SyncInstalledAppsUseCase,
-    private val favouritesRepository: FavouritesRepository
+    private val favouritesRepository: FavouritesRepository,
+    private val starredRepository: StarredRepository,
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
@@ -47,6 +49,7 @@ class HomeViewModel(
                 loadRepos(isInitial = true)
                 observeInstalledApps()
                 observeFavourites()
+                observeStarredRepos()
 
                 hasLoadedInitialData = true
             }
@@ -146,13 +149,20 @@ class HomeViewModel(
                         .first()
                         .associateBy { it.repoId }
 
+                    val starredReposMap = starredRepository
+                        .getAllStarred()
+                        .first()
+                        .associateBy { it.repoId }
+
                     val newReposWithStatus = paginatedRepos.repos.map { repo ->
                         val app = installedAppsMap[repo.id]
                         val favourite = favoritesMap[repo.id]
+                        val starred = starredReposMap[repo.id]
 
                         DiscoveryRepository(
                             isInstalled = app != null,
                             isFavourite = favourite != null,
+                            isStarred = starred != null,
                             isUpdateAvailable = app?.isUpdateAvailable ?: false,
                             repository = repo
                         )
@@ -188,7 +198,8 @@ class HomeViewModel(
                     it.copy(
                         isLoading = false,
                         isLoadingMore = false,
-                        errorMessage = t.message ?: getString(Res.string.home_failed_to_load_repositories)
+                        errorMessage = t.message
+                            ?: getString(Res.string.home_failed_to_load_repositories)
                     )
                 }
             }
@@ -252,6 +263,23 @@ class HomeViewModel(
                         repos = current.repos.map { homeRepo ->
                             homeRepo.copy(
                                 isFavourite = favouritesMap.containsKey(homeRepo.repository.id)
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun observeStarredRepos() {
+        viewModelScope.launch {
+            starredRepository.getAllStarred().collect { starredRepos ->
+                val starredReposById = starredRepos.associateBy { it.repoId }
+                _state.update { current ->
+                    current.copy(
+                        repos = current.repos.map { homeRepo ->
+                            homeRepo.copy(
+                                isStarred = starredReposById.containsKey(homeRepo.repository.id)
                             )
                         }
                     )

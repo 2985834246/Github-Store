@@ -10,36 +10,53 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import zed.rainxch.githubstore.core.domain.repository.FavouritesRepository
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
+import zed.rainxch.githubstore.core.domain.repository.StarredRepository
 import zed.rainxch.githubstore.core.domain.use_cases.SyncInstalledAppsUseCase
 import zed.rainxch.githubstore.core.presentation.model.DiscoveryRepository
+import zed.rainxch.githubstore.feature.home.presentation.HomeState
 import zed.rainxch.githubstore.feature.search.domain.repository.SearchRepository
 
 class SearchViewModel(
     private val searchRepository: SearchRepository,
     private val installedAppsRepository: InstalledAppsRepository,
     private val syncInstalledAppsUseCase: SyncInstalledAppsUseCase,
-    private val favouritesRepository: FavouritesRepository
+    private val favouritesRepository: FavouritesRepository,
+    private val starredRepository: StarredRepository
 ) : ViewModel() {
 
+    private var hasLoadedInitialData = false
     private var currentSearchJob: Job? = null
     private var currentPage = 1
     private var searchDebounceJob: Job? = null
 
     private val _state = MutableStateFlow(SearchState())
-    val state = _state.asStateFlow()
+    val state = _state
+        .onStart {
+            if (!hasLoadedInitialData) {
+                syncSystemState()
 
-    init {
-        syncSystemState()
-        observeInstalledApps()
-        observeFavouriteApps()
-    }
+                observeInstalledApps()
+                observeFavouriteApps()
+                observeStarredRepos()
+
+                hasLoadedInitialData = true
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000L),
+            initialValue = SearchState()
+        )
 
     private fun syncSystemState() {
         viewModelScope.launch {
@@ -72,6 +89,7 @@ class SearchViewModel(
             }
         }
     }
+
     private fun observeFavouriteApps() {
         viewModelScope.launch {
             favouritesRepository.getAllFavorites().collect { favoriteRepos ->
@@ -83,6 +101,22 @@ class SearchViewModel(
                             searchRepo.copy(
                                 isFavourite = app != null
                             )
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun observeStarredRepos() {
+        viewModelScope.launch {
+            starredRepository.getAllStarred().collect { starredRepos ->
+                val installedMap = starredRepos.associateBy { it.repoId }
+                _state.update { current ->
+                    current.copy(
+                        repositories = current.repositories.map { searchRepo ->
+                            val app = installedMap[searchRepo.repository.id]
+                            searchRepo.copy(isStarred = app != null)
                         }
                     )
                 }
@@ -127,6 +161,10 @@ class SearchViewModel(
                     .getAllFavorites()
                     .first()
                     .associateBy { it.repoId }
+                val starredReposMap = starredRepository
+                    .getAllStarred()
+                    .first()
+                    .associateBy { it.repoId }
 
                 searchRepository
                     .searchRepositories(
@@ -141,10 +179,12 @@ class SearchViewModel(
                         val newReposWithStatus = paginatedRepos.repos.map { repo ->
                             val app = installedMap[repo.id]
                             val favourite = favoritesMap[repo.id]
+                            val starred = starredReposMap[repo.id]
 
                             DiscoveryRepository(
                                 isInstalled = app != null,
                                 isFavourite = favourite != null,
+                                isStarred = starred != null,
                                 isUpdateAvailable = app?.isUpdateAvailable ?: false,
                                 repository = repo
                             )

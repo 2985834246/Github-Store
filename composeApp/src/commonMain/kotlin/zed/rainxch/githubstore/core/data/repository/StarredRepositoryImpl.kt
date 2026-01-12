@@ -176,7 +176,7 @@ class StarredRepositoryImpl(
                 val name = asset.name.lowercase()
                 when (platform.type) {
                     PlatformType.ANDROID -> name.endsWith(".apk")
-                    PlatformType.WINDOWS -> name.endsWith(".msi") || name.endsWith(".exe") || name.contains(".exe")
+                    PlatformType.WINDOWS -> name.endsWith(".msi") || name.endsWith(".exe")
                     PlatformType.MACOS -> name.endsWith(".dmg") || name.endsWith(".pkg")
                     PlatformType.LINUX -> name.endsWith(".appimage") || name.endsWith(".deb") || name.endsWith(".rpm")
                 }
