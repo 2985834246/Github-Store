@@ -224,6 +224,9 @@
     <string name="dismiss">Fermer</string>
     <string name="sync_starred_failed">Échec de la synchronisation des dépôts favoris</string>
 
+    <string name="developer_profile_title">Profil du développeur</string>
+    <string name="open_developer_profile">Ouvrir le profil du développeur</string>
+
     <!-- Developer Profile - General -->
     <string name="failed_to_load_repositories">Échec du chargement des dépôts</string>
     <string name="failed_to_load_profile">Échec du chargement du profil</string>
@@ -255,11 +258,11 @@
     <string name="no_favorite_repos">Aucun dépôt favori</string>
 
     <!-- Developer Profile - Repository Item -->
-    <string name="updated_x_ago">Mis à jour il y a %1$s</string>
+    <string name="updated_x_ago">Mis à jour %1$s</string>
     <string name="has_release">A une version</string>
 
     <!-- Developer Profile - Relative Time -->
-    <string name="time_years_ago">il y a %1$d a</string>
+    <string name="time_years_ago">il y a %1$d an</string>
     <string name="time_months_ago">il y a %1$d mois</string>
     <string name="time_days_ago">il y a %1$d j</string>
     <string name="time_hours_ago">il y a %1$d h</string>

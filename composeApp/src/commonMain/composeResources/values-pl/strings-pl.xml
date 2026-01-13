@@ -241,6 +241,9 @@
     <string name="dismiss">Zamknij</string>
     <string name="sync_starred_failed">Nie udało się zsynchronizować oznaczonych gwiazdką repozytoriów</string>
 
+    <string name="developer_profile_title">Profil dewelopera</string>
+    <string name="open_developer_profile">Otwórz profil dewelopera</string>
+
     <!-- Developer Profile - General -->
     <string name="failed_to_load_repositories">Nie udało się załadować repozytoriów</string>
     <string name="failed_to_load_profile">Nie udało się załadować profilu</string>
@@ -272,7 +275,7 @@
     <string name="no_favorite_repos">Brak ulubionych repozytoriów</string>
 
     <!-- Developer Profile - Repository Item -->
-    <string name="updated_x_ago">Zaktualizowano %1$s temu</string>
+    <string name="updated_x_ago">Zaktualizowano %1$s</string>
     <string name="has_release">Ma wydanie</string>
 
     <!-- Developer Profile - Relative Time -->

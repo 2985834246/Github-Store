@@ -275,6 +275,9 @@
     <string name="dismiss">닫기</string>
     <string name="sync_starred_failed">별표 저장소 동기화에 실패했습니다</string>
 
+    <string name="developer_profile_title">개발자 프로필</string>
+    <string name="open_developer_profile">개발자 프로필 열기</string>
+
     <!-- Developer Profile - General -->
     <string name="failed_to_load_repositories">저장소를 불러오지 못했습니다</string>
     <string name="failed_to_load_profile">프로필을 불러오지 못했습니다</string>
@@ -306,7 +309,7 @@
     <string name="no_favorite_repos">즐겨찾기 저장소가 없습니다</string>
 
     <!-- Developer Profile - Repository Item -->
-    <string name="updated_x_ago">%1$s 전 업데이트됨</string>
+    <string name="updated_x_ago">%1$s 업데이트됨</string>
     <string name="has_release">릴리스 있음</string>
 
     <!-- Developer Profile - Relative Time -->
