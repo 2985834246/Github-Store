@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import githubstore.composeapp.generated.resources.Res
 import githubstore.composeapp.generated.resources.added_to_favourites
+import githubstore.composeapp.generated.resources.auto_update_disabled
+import githubstore.composeapp.generated.resources.auto_update_enabled
 import githubstore.composeapp.generated.resources.installer_saved_downloads
 import githubstore.composeapp.generated.resources.removed_from_favourites
+import githubstore.composeapp.generated.resources.shizuku_permission_requested
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel

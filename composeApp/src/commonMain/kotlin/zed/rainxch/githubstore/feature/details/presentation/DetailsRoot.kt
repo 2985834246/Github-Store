@@ -94,6 +94,10 @@ fun DetailsRoot(
                     snackbarHostState.showSnackbar(event.message)
                 }
             }
+
+            DetailsEvent.OnNavigateToShizukuSetup -> {
+
+            }
         }
     }
 

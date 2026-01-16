@@ -30,9 +30,13 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import githubstore.composeapp.generated.resources.Res
 import githubstore.composeapp.generated.resources.appmanager_description
+import githubstore.composeapp.generated.resources.enable_shizuku
 import githubstore.composeapp.generated.resources.inspect_with_appmanager
 import githubstore.composeapp.generated.resources.obtainium_description
 import githubstore.composeapp.generated.resources.open_in_obtainium
+import githubstore.composeapp.generated.resources.shizuku_active
+import githubstore.composeapp.generated.resources.shizuku_benefits_short
+import githubstore.composeapp.generated.resources.silent_install_available
 import io.github.fletchmckee.liquid.liquefiable
 import org.jetbrains.compose.resources.stringResource
 import zed.rainxch.githubstore.feature.details.presentation.DetailsAction
@@ -185,7 +189,6 @@ fun LazyListScope.header(
         }
     }
 
-    // Shizuku status banner (shown when available)
     if (state.isShizukuAvailable) {
         item {
             Card(
@@ -210,7 +213,9 @@ fun LazyListScope.header(
                         modifier = Modifier.size(24.dp)
                     )
 
-                    Column(modifier = Modifier.weight(1f)) {
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Text(
                             text = stringResource(Res.string.shizuku_active),
                             style = MaterialTheme.typography.titleSmall,

@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import githubstore.composeapp.generated.resources.Res
 import githubstore.composeapp.generated.resources.architecture_compatible
+import githubstore.composeapp.generated.resources.auto_update
 import githubstore.composeapp.generated.resources.cancel_download
 import githubstore.composeapp.generated.resources.downloading
 import githubstore.composeapp.generated.resources.install_latest
@@ -45,7 +46,11 @@ import githubstore.composeapp.generated.resources.installing
 import githubstore.composeapp.generated.resources.not_available
 import githubstore.composeapp.generated.resources.percent
 import githubstore.composeapp.generated.resources.reinstall
+import githubstore.composeapp.generated.resources.shizuku_enabled
 import githubstore.composeapp.generated.resources.show_install_options
+import githubstore.composeapp.generated.resources.silent_install
+import githubstore.composeapp.generated.resources.silent_reinstall
+import githubstore.composeapp.generated.resources.silent_update
 import githubstore.composeapp.generated.resources.update_app
 import githubstore.composeapp.generated.resources.update_to_version
 import githubstore.composeapp.generated.resources.updating
