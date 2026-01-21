@@ -88,7 +88,6 @@ fun LazyListScope.header(
                 },
                 offset = DpOffset(x = 0.dp, y = 20.dp),
             ) {
-                // Shizuku setup option (if not available)
                 if (!state.isShizukuAvailable && state.isShizukuEnabled) {
                     DropdownMenuItem(
                         text = {

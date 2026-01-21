@@ -5,10 +5,15 @@ import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
 import githubstore.composeapp.generated.resources.Res
 import githubstore.composeapp.generated.resources.added_to_favourites
+import githubstore.composeapp.generated.resources.app_installed_successfully
+import githubstore.composeapp.generated.resources.app_updated_successfully
 import githubstore.composeapp.generated.resources.auto_update_disabled
 import githubstore.composeapp.generated.resources.auto_update_enabled
+import githubstore.composeapp.generated.resources.installation_failed
 import githubstore.composeapp.generated.resources.installer_saved_downloads
 import githubstore.composeapp.generated.resources.removed_from_favourites
+import githubstore.composeapp.generated.resources.shizuku_permission_error
+import githubstore.composeapp.generated.resources.shizuku_permission_granted
 import githubstore.composeapp.generated.resources.shizuku_permission_requested
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -27,24 +32,33 @@ import kotlinx.datetime.format
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.getString
-import zed.rainxch.githubstore.core.data.services.PackageMonitor
 import zed.rainxch.githubstore.core.data.local.db.entities.FavoriteRepo
 import zed.rainxch.githubstore.core.data.local.db.entities.InstallSource
 import zed.rainxch.githubstore.core.data.local.db.entities.InstalledApp
 import zed.rainxch.githubstore.core.data.model.InstallationProgress
+import zed.rainxch.githubstore.core.data.services.Downloader
+import zed.rainxch.githubstore.core.data.services.Installer
+import zed.rainxch.githubstore.core.data.services.PackageMonitor
 import zed.rainxch.githubstore.core.domain.Platform
 import zed.rainxch.githubstore.core.domain.model.PlatformType
 import zed.rainxch.githubstore.core.domain.repository.FavouritesRepository
 import zed.rainxch.githubstore.core.domain.repository.InstalledAppsRepository
-import zed.rainxch.githubstore.core.presentation.utils.BrowserHelper
-import zed.rainxch.githubstore.core.data.services.Downloader
-import zed.rainxch.githubstore.core.data.services.Installer
 import zed.rainxch.githubstore.core.domain.repository.StarredRepository
 import zed.rainxch.githubstore.core.domain.use_cases.SyncInstalledAppsUseCase
+import zed.rainxch.githubstore.core.presentation.utils.BrowserHelper
 import zed.rainxch.githubstore.feature.details.domain.repository.DetailsRepository
-import zed.rainxch.githubstore.feature.details.presentation.DetailsEvent.*
+import zed.rainxch.githubstore.feature.details.presentation.DetailsEvent.OnMessage
+import zed.rainxch.githubstore.feature.details.presentation.DetailsEvent.OnOpenRepositoryInApp
 import zed.rainxch.githubstore.feature.details.presentation.model.LogResult
-import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.*
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.Cancelled
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.DownloadStarted
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.Downloaded
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.Error
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.Installed
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.OpenedInAppManager
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.PreparingForAppManager
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.UpdateStarted
+import zed.rainxch.githubstore.feature.details.presentation.model.LogResult.Updated
 import java.io.File
 import kotlin.time.Clock.System
 import kotlin.time.ExperimentalTime
@@ -195,9 +209,22 @@ class DetailsViewModel(
                 val isAppManagerEnabled = platform.type == PlatformType.ANDROID
 
                 val isShizukuEnabled = platform.type == PlatformType.ANDROID
-                val isShizukuInstalled = installer.isShizukuInstalled()
-                val isShizukuRunning = installer.isShizukuAvailable()
-                val hasShizukuPermission = installer.isShizukuAvailable()
+                val isShizukuInstalled = if (isShizukuEnabled) {
+                    installer.isShizukuInstalled()
+                } else false
+
+                val isShizukuRunning = if (isShizukuInstalled) {
+                    installer.isShizukuAvailable()
+                } else false
+
+                val hasShizukuPermission = if (isShizukuRunning) {
+                    try {
+                        installer.isShizukuAvailable()
+                    } catch (e: Exception) {
+                        Logger.e(e) { "Error checking Shizuku permission" }
+                        false
+                    }
+                } else false
 
                 val latestRelease = latestReleaseDeferred.await()
                 val stats = statsDeferred.await()
@@ -215,6 +242,7 @@ class DetailsViewModel(
                 val isAppManagerAvailable = installer.isAppManagerInstalled()
 
                 Logger.d { "Loaded repo: ${repo.name}, installedApp: ${installedApp?.packageName}" }
+                Logger.d { "Shizuku status: enabled=$isShizukuEnabled, installed=$isShizukuInstalled, running=$isShizukuRunning, permission=$hasShizukuPermission" }
 
                 _state.value = _state.value.copy(
                     isLoading = false,
@@ -294,7 +322,7 @@ class DetailsViewModel(
                                 assetName = assetName,
                                 size = 0L,
                                 tag = _state.value.latestRelease?.tagName ?: "",
-                                result = LogResult.Cancelled
+                                result = Cancelled
                             )
                         } catch (t: Throwable) {
                             Logger.e { "Failed to cancel download: ${t.message}" }
@@ -439,7 +467,7 @@ class DetailsViewModel(
                                 assetName = primary.name,
                                 size = primary.size,
                                 tag = release.tagName,
-                                result = LogResult.PreparingForAppManager
+                                result = PreparingForAppManager
                             )
 
                             _state.value = _state.value.copy(
@@ -465,7 +493,7 @@ class DetailsViewModel(
                                 assetName = primary.name,
                                 size = primary.size,
                                 tag = release.tagName,
-                                result = LogResult.Downloaded
+                                result = Downloaded
                             )
 
                             _state.value = _state.value.copy(downloadStage = DownloadStage.IDLE)
@@ -486,7 +514,7 @@ class DetailsViewModel(
                                 assetName = primary.name,
                                 size = primary.size,
                                 tag = release.tagName,
-                                result = LogResult.OpenedInAppManager
+                                result = OpenedInAppManager
                             )
                         }
                     } catch (t: Throwable) {
@@ -521,56 +549,43 @@ class DetailsViewModel(
             }
 
             DetailsAction.RequestShizukuPermission -> {
-                val granted = installer.requestShizukuPermission()
-                if (!granted) {
-                    viewModelScope.launch {
-                        _events.send(
-                            OnMessage(
-                                getString(Res.string.shizuku_permission_requested)
+                viewModelScope.launch {
+                    try {
+                        val alreadyGranted = installer.requestShizukuPermission()
+
+                        if (alreadyGranted) {
+                            _state.update {
+                                it.copy(
+                                    hasShizukuPermission = true,
+                                    isShizukuRunning = true
+                                )
+                            }
+                            _events.send(
+                                OnMessage(getString(Res.string.shizuku_permission_granted))
                             )
+                        } else {
+                            _events.send(
+                                OnMessage(getString(Res.string.shizuku_permission_requested))
+                            )
+                            delay(500)
+                            refreshShizukuStatusInternal()
+                        }
+                    } catch (e: Exception) {
+                        Logger.e(e) { "Error requesting Shizuku permission" }
+                        _events.send(
+                            OnMessage(getString(Res.string.shizuku_permission_error))
                         )
                     }
-                } else {
-                    // Permission already granted, update state
-                    _state.value = _state.value.copy(
-                        isShizukuAvailable = installer.isShizukuAvailable()
-                    )
-                }
-            }
-
-            DetailsAction.ToggleAutoUpdate -> {
-                viewModelScope.launch {
-                    val app = _state.value.installedApp ?: return@launch
-                    val newValue = !app.autoUpdateEnabled
-
-                    installedAppsRepository.updateApp(
-                        app.copy(autoUpdateEnabled = newValue)
-                    )
-
-                    val updatedApp = installedAppsRepository.getAppByPackage(app.packageName)
-                    _state.value = _state.value.copy(installedApp = updatedApp)
-
-                    _events.send(
-                        OnMessage(
-                            getString(
-                                if (newValue) Res.string.auto_update_enabled
-                                else Res.string.auto_update_disabled
-                            )
-                        )
-                    )
                 }
             }
 
             DetailsAction.OnNavigateBackClick -> {
-                // Handled in composable
             }
 
             is DetailsAction.OpenDeveloperProfile -> {
-                // Handled in composable
             }
 
             is DetailsAction.OnMessage -> {
-                // Handled in composable
             }
 
             DetailsAction.OpenShizukuSetupDialog -> {
@@ -582,21 +597,57 @@ class DetailsViewModel(
             }
 
             DetailsAction.OnShizukuRequestPermission -> {
-                val granted = installer.requestShizukuPermission()
-                if (granted) {
-                    _state.update {
-                        it.copy(
-                            hasShizukuPermission = true,
-                            isShizukuRunning = true
-                        )
+                viewModelScope.launch {
+                    try {
+                        val granted = installer.requestShizukuPermission()
+
+                        if (granted) {
+                            _state.update {
+                                it.copy(
+                                    hasShizukuPermission = true,
+                                    isShizukuRunning = true
+                                )
+                            }
+                        } else {
+                            delay(1000)
+                            refreshShizukuStatusInternal()
+                        }
+                    } catch (e: Exception) {
+                        Logger.e(e) { "Error in OnShizukuRequestPermission" }
                     }
                 }
             }
 
             DetailsAction.RefreshShizukuStatus -> {
+                refreshShizukuStatusInternal()
+            }
+
+            DetailsAction.OpenShizukuApp -> {
+                try {
+                    installer.openShizukuApp()
+
+                    viewModelScope.launch {
+                        delay(500)
+                        refreshShizukuStatusInternal()
+                    }
+                } catch (e: Exception) {
+                    Logger.e(e) { "Error opening Shizuku app" }
+                }
+            }
+        }
+    }
+
+    private fun refreshShizukuStatusInternal() {
+        viewModelScope.launch {
+            try {
                 val isShizukuInstalled = installer.isShizukuInstalled()
-                val isShizukuRunning = installer.isShizukuAvailable()
-                val hasShizukuPermission = installer.isShizukuAvailable()
+                val isShizukuRunning = if (isShizukuInstalled) {
+                    installer.isShizukuAvailable()
+                } else false
+
+                val hasShizukuPermission = if (isShizukuRunning) {
+                    installer.isShizukuAvailable()
+                } else false
 
                 _state.update {
                     it.copy(
@@ -606,11 +657,9 @@ class DetailsViewModel(
                     )
                 }
 
-                Logger.d { "Shizuku status: installed=$isShizukuInstalled, running=$isShizukuRunning, permission=$hasShizukuPermission" }
-            }
-
-            DetailsAction.OpenShizukuApp -> {
-                installer.openShizukuApp()
+                Logger.d { "Shizuku status refreshed: installed=$isShizukuInstalled, running=$isShizukuRunning, permission=$hasShizukuPermission, available=${_state.value.isShizukuAvailable}" }
+            } catch (e: Exception) {
+                Logger.e(e) { "Error refreshing Shizuku status" }
             }
         }
     }
@@ -631,7 +680,7 @@ class DetailsViewModel(
                     assetName = assetName,
                     size = sizeBytes,
                     tag = releaseTag,
-                    result = if (isUpdate) LogResult.UpdateStarted else LogResult.DownloadStarted
+                    result = if (isUpdate) UpdateStarted else DownloadStarted
                 )
 
                 _state.value = _state.value.copy(
@@ -641,8 +690,9 @@ class DetailsViewModel(
                     installProgressPercent = null
                 )
 
-                // Check if using Shizuku (via interface method)
-                val useShizuku = installer.isShizukuAvailable()
+                val useShizuku = _state.value.isShizukuAvailable
+
+                Logger.d { "Installing with Shizuku: $useShizuku" }
 
                 if (!useShizuku) {
                     installer.ensurePermissionsOrThrow(
@@ -650,7 +700,6 @@ class DetailsViewModel(
                     )
                 }
 
-                // Download phase
                 _state.value = _state.value.copy(downloadStage = DownloadStage.DOWNLOADING)
                 downloader.download(downloadUrl, assetName).collect { p ->
                     _state.value = _state.value.copy(downloadProgressPercent = p.percent)
@@ -666,12 +715,10 @@ class DetailsViewModel(
                     assetName = assetName,
                     size = sizeBytes,
                     tag = releaseTag,
-                    result = LogResult.Downloaded
+                    result = Downloaded
                 )
 
-                // Installation phase
                 if (useShizuku) {
-                    // Use Shizuku for silent installation with progress
                     _state.value = _state.value.copy(downloadStage = DownloadStage.INSTALLING)
 
                     installer.installWithShizukuProgress(File(filePath)).collect { progress ->
@@ -700,7 +747,6 @@ class DetailsViewModel(
                             is InstallationProgress.Success -> {
                                 _state.value = _state.value.copy(installProgressPercent = 100)
 
-                                // Save to database
                                 if (platform.type == PlatformType.ANDROID) {
                                     saveInstalledAppToDatabase(
                                         assetName = assetName,
@@ -716,7 +762,16 @@ class DetailsViewModel(
                                     assetName = assetName,
                                     size = sizeBytes,
                                     tag = releaseTag,
-                                    result = if (isUpdate) LogResult.Updated else LogResult.Installed
+                                    result = if (isUpdate) Updated else Installed
+                                )
+
+                                _events.send(
+                                    OnMessage(
+                                        getString(
+                                            if (isUpdate) Res.string.app_updated_successfully
+                                            else Res.string.app_installed_successfully
+                                        )
+                                    )
                                 )
                             }
 
@@ -726,7 +781,6 @@ class DetailsViewModel(
                         }
                     }
                 } else {
-                    // Standard installation (fallback)
                     _state.value = _state.value.copy(downloadStage = DownloadStage.INSTALLING)
                     val ext = assetName.substringAfterLast('.', "").lowercase()
 
@@ -745,7 +799,7 @@ class DetailsViewModel(
                         )
                     } else {
                         viewModelScope.launch {
-                            _events.send(DetailsEvent.OnMessage(getString(Res.string.installer_saved_downloads)))
+                            _events.send(OnMessage(getString(Res.string.installer_saved_downloads)))
                         }
                     }
 
@@ -755,7 +809,7 @@ class DetailsViewModel(
                         assetName = assetName,
                         size = sizeBytes,
                         tag = releaseTag,
-                        result = if (isUpdate) LogResult.Updated else LogResult.Installed
+                        result = if (isUpdate) Updated else Installed
                     )
                 }
 
@@ -778,8 +832,16 @@ class DetailsViewModel(
                     assetName = assetName,
                     size = sizeBytes,
                     tag = releaseTag,
-                    result = LogResult.Error(t.message)
+                    result = Error(t.message)
                 )
+
+                viewModelScope.launch {
+                    _events.send(
+                        OnMessage(
+                            getString(Res.string.installation_failed) + ": ${t.message}"
+                        )
+                    )
+                }
             }
         }
     }
@@ -898,7 +960,7 @@ class DetailsViewModel(
                     assetName = assetName,
                     size = sizeBytes,
                     tag = releaseTag,
-                    result = LogResult.DownloadStarted
+                    result = DownloadStarted
                 )
                 _state.value = _state.value.copy(
                     isDownloading = true,
@@ -917,7 +979,7 @@ class DetailsViewModel(
                     assetName = assetName,
                     size = sizeBytes,
                     tag = releaseTag,
-                    result = LogResult.Downloaded
+                    result = Downloaded
                 )
 
             } catch (t: Throwable) {
@@ -930,7 +992,7 @@ class DetailsViewModel(
                     assetName = assetName,
                     size = sizeBytes,
                     tag = releaseTag,
-                    result = LogResult.Error(t.message)
+                    result = Error(t.message)
                 )
             }
         }

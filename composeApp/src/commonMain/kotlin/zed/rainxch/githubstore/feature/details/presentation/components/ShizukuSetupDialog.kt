@@ -62,7 +62,7 @@ fun ShizukuSetupDialog(
 
     LaunchedEffect(isShizukuInstalled, isShizukuRunning, hasPermission) {
         if (isShizukuInstalled && isShizukuRunning && hasPermission) {
-            delay(500)
+            delay(1000)
             onDismiss()
         }
     }
@@ -91,7 +91,6 @@ fun ShizukuSetupDialog(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                // Step 1: Install Shizuku
                 SetupStep(
                     number = 1,
                     title = stringResource(Res.string.install_shizuku_app),
@@ -105,7 +104,6 @@ fun ShizukuSetupDialog(
                     } else null
                 )
 
-                // Step 2: Start Shizuku (only show if installed)
                 if (isShizukuInstalled) {
                     SetupStep(
                         number = 2,
@@ -128,7 +126,6 @@ fun ShizukuSetupDialog(
                     )
                 }
 
-                // Step 3: Grant permission (only show if running)
                 if (isShizukuRunning) {
                     SetupStep(
                         number = 3,

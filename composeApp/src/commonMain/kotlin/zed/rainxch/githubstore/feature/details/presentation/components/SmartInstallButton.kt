@@ -108,10 +108,12 @@ fun SmartInstallButton(
                 stringResource(Res.string.update_app)
             }
         }
+
         isUpdateAvailable -> stringResource(
             Res.string.update_to_version,
             installedApp.latestVersion
         )
+
         isInstalled -> {
             if (isShizukuAvailable) {
                 stringResource(Res.string.silent_reinstall)
@@ -119,6 +121,7 @@ fun SmartInstallButton(
                 stringResource(Res.string.reinstall)
             }
         }
+
         else -> {
             if (isShizukuAvailable) {
                 stringResource(Res.string.silent_install)
@@ -132,7 +135,6 @@ fun SmartInstallButton(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Shizuku indicator
         if (isShizukuAvailable && !isActiveDownload) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -238,12 +240,13 @@ fun SmartInstallButton(
                                             fontWeight = FontWeight.Bold
                                         )
 
-                                        // Show install progress if using Shizuku
                                         if (installProgress != null && isShizukuAvailable) {
                                             Text(
                                                 text = "${installProgress}%",
                                                 style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                                                color = MaterialTheme.colorScheme.onPrimary.copy(
+                                                    alpha = 0.8f
+                                                )
                                             )
                                         }
                                     }
@@ -316,9 +319,17 @@ fun SmartInstallButton(
                                         text = assetArch ?: systemArch.name.lowercase(),
                                         color = if (enabled) {
                                             when {
-                                                isUpdateAvailable -> MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.8f)
-                                                isInstalled -> MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.8f)
-                                                else -> MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                                                isUpdateAvailable -> MaterialTheme.colorScheme.onTertiary.copy(
+                                                    alpha = 0.8f
+                                                )
+
+                                                isInstalled -> MaterialTheme.colorScheme.onSecondary.copy(
+                                                    alpha = 0.8f
+                                                )
+
+                                                else -> MaterialTheme.colorScheme.onPrimary.copy(
+                                                    alpha = 0.8f
+                                                )
                                             }
                                         } else {
                                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
@@ -338,9 +349,17 @@ fun SmartInstallButton(
                                             contentDescription = stringResource(Res.string.architecture_compatible),
                                             tint = if (enabled) {
                                                 when {
-                                                    isUpdateAvailable -> MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.8f)
-                                                    isInstalled -> MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.8f)
-                                                    else -> MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                                                    isUpdateAvailable -> MaterialTheme.colorScheme.onTertiary.copy(
+                                                        alpha = 0.8f
+                                                    )
+
+                                                    isInstalled -> MaterialTheme.colorScheme.onSecondary.copy(
+                                                        alpha = 0.8f
+                                                    )
+
+                                                    else -> MaterialTheme.colorScheme.onPrimary.copy(
+                                                        alpha = 0.8f
+                                                    )
                                                 }
                                             } else {
                                                 MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
@@ -409,44 +428,6 @@ fun SmartInstallButton(
                         } else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 }
-            }
-        }
-
-        // Auto-update toggle (only show for installed apps with Shizuku)
-        if (isInstalled && isShizukuAvailable) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onAction(DetailsAction.ToggleAutoUpdate)
-                    }
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Update,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = stringResource(Res.string.auto_update),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-
-                Switch(
-                    checked = installedApp.autoUpdateEnabled,
-                    onCheckedChange = {
-                        onAction(DetailsAction.ToggleAutoUpdate)
-                    }
-                )
             }
         }
     }

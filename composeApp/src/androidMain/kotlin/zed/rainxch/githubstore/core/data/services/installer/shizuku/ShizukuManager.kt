@@ -72,10 +72,13 @@ class ShizukuManager(
         }
     }
 
-    private fun checkPermission(): Boolean {
+    fun checkPermission(): Boolean {
         return try {
+            if (!Shizuku.pingBinder()) {
+                return false
+            }
+
             if (Shizuku.isPreV11()) {
-                // Pre-v11 doesn't need permission
                 true
             } else {
                 Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
@@ -88,8 +91,14 @@ class ShizukuManager(
 
     fun requestPermission(): Boolean {
         return try {
+            if (!Shizuku.pingBinder()) {
+                Logger.w { "Cannot request permission: Shizuku not running" }
+                return false
+            }
+
             if (checkPermission()) {
                 _hasPermission.value = true
+                Logger.d { "Permission already granted" }
                 true
             } else {
                 Logger.d { "Requesting Shizuku permission" }

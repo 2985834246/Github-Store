@@ -36,7 +36,6 @@ data class InstalledApp(
     val installedVersionCode: Long = 0L,
     val latestVersionName: String? = null,
     val latestVersionCode: Long? = null,
-    val autoUpdateEnabled: Boolean = false,
     val lastAutoUpdateAttempt: Long? = null,
     val autoUpdateFailCount: Int = 0,
     val autoUpdateFailReason: String? = null

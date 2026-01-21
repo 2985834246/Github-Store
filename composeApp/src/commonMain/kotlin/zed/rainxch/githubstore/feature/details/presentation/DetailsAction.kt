@@ -25,7 +25,6 @@ sealed interface DetailsAction {
     // Shizuku actions
     data object RequestShizukuPermission : DetailsAction
 
-    data object ToggleAutoUpdate : DetailsAction
     data object OpenShizukuSetupDialog : DetailsAction
     data object CloseShizukuSetupDialog : DetailsAction
     data object OpenShizukuApp : DetailsAction
