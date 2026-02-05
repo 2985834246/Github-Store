@@ -341,14 +341,40 @@ Every bit of support—financial or not—means the world and keeps this project
  </picture>
 </a>
 
-## 🔑 Configuration
+## 🔑 Configuration (GitHub OAuth)
 
-GitHub Store uses a GitHub OAuth app for authentication and API rate‑limit isolation.
+This project requires your own GitHub OAuth App to handle authentication and avoid shared API rate limits.
 
-1. Create a GitHub OAuth app at **GitHub → Settings → Developer settings → OAuth Apps**.
-2. Set the callback URL to `githubstore://callback` (_Not quite important_).
-3. Copy the **Client ID** from the OAuth app.
-4. In your project’s `local.properties`, add:
+### 1 - Create a GitHub OAuth App
+Go to:
+**GitHub → Settings → Developer settings → OAuth Apps → New OAuth App**
+
+| Field                          | Value                                       |
+| ------------------------------ | ------------------------------------------- |
+| **Application name**           | Anything you like (e.g. *GitHub Store Dev*) |
+| **Homepage URL** | `https://github.com/username/repo_name`                   |
+| **Authorization callback URL** | `githubstore://callback`                    |
+
+Then click **Create application**.
+
+### 2 - Copy Your Client ID
+After creating the app, GitHub will show:
+- **Client ID** ← you need this
+- **Client Secret** ← ❗ NOT required for this project
+
+### 3 - Add It to Your Project
+Open your project’s `local.properties` file (root of the project) and add:
+```properties
+GITHUB_CLIENT_ID=YOUR_CLIENT_ID_HERE
+```
+
+### 4 - Sync & Run
+Sync the project and run the app. You should now be able to sign in with GitHub.
+
+### ❗ Important Notes
+- `local.properties` is **not committed to Git**, so your Client ID stays local.
+- This project only needs the **Client ID** (not the Client Secret).
+- Each developer should create their own OAuth app for development.
 
 ---
 
