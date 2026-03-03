@@ -1,6 +1,6 @@
 {
   "platform": "windows",
-  "lastUpdated": "2026-03-02T01:27:09.171693Z",
+  "lastUpdated": "2026-03-03T01:29:49.738555Z",
   "totalCount": 50,
   "repositories": [
     {
@@ -14,8 +14,8 @@
       "description": "Microsoft PowerToys is a collection of utilities that supercharge productivity and customization on Windows",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/microsoft/PowerToys",
-      "stargazersCount": 130152,
-      "forksCount": 7733,
+      "stargazersCount": 130169,
+      "forksCount": 7736,
       "language": "C#",
       "topics": [
         "advanced-paste",
@@ -32,7 +32,7 @@
         "windows-11"
       ],
       "releasesUrl": "https://api.github.com/repos/microsoft/PowerToys/releases{/id}",
-      "updatedAt": "2026-03-02T00:35:20Z"
+      "updatedAt": "2026-03-03T01:22:45Z"
     },
     {
       "id": 299354207,
@@ -45,8 +45,8 @@
       "description": "An open-source remote desktop application designed for self-hosting, as an alternative to TeamViewer.",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/rustdesk/rustdesk",
-      "stargazersCount": 108408,
-      "forksCount": 16142,
+      "stargazersCount": 108489,
+      "forksCount": 16154,
       "language": "Rust",
       "topics": [
         "android",
@@ -70,7 +70,7 @@
         "windows"
       ],
       "releasesUrl": "https://api.github.com/repos/rustdesk/rustdesk/releases{/id}",
-      "updatedAt": "2026-03-02T01:26:43Z"
+      "updatedAt": "2026-03-03T01:25:34Z"
     },
     {
       "id": 721767116,
@@ -83,8 +83,8 @@
       "description": "A modern GUI client based on Tauri, designed to run in Windows, macOS and Linux for tailored proxy experience",
       "defaultBranch": "dev",
       "htmlUrl": "https://github.com/clash-verge-rev/clash-verge-rev",
-      "stargazersCount": 99653,
-      "forksCount": 7262,
+      "stargazersCount": 99917,
+      "forksCount": 7274,
       "language": "TypeScript",
       "topics": [
         "clash",
@@ -97,7 +97,7 @@
         "windows"
       ],
       "releasesUrl": "https://api.github.com/repos/clash-verge-rev/clash-verge-rev/releases{/id}",
-      "updatedAt": "2026-03-02T01:26:33Z"
+      "updatedAt": "2026-03-03T01:29:54Z"
     },
     {
       "id": 5108051,
@@ -110,8 +110,8 @@
       "description": "Open Source Computer Vision Library",
       "defaultBranch": "4.x",
       "htmlUrl": "https://github.com/opencv/opencv",
-      "stargazersCount": 86372,
-      "forksCount": 56526,
+      "stargazersCount": 86390,
+      "forksCount": 56533,
       "language": "C++",
       "topics": [
         "c-plus-plus",
@@ -121,46 +121,7 @@
         "opencv"
       ],
       "releasesUrl": "https://api.github.com/repos/opencv/opencv/releases{/id}",
-      "updatedAt": "2026-03-02T00:07:34Z"
-    },
-    {
-      "id": 10744183,
-      "name": "netdata",
-      "fullName": "netdata/netdata",
-      "owner": {
-        "login": "netdata",
-        "avatarUrl": "https://avatars.githubusercontent.com/u/43390781?v=4"
-      },
-      "description": "The fastest path to AI-powered full stack observability, even for lean teams.",
-      "defaultBranch": "master",
-      "htmlUrl": "https://github.com/netdata/netdata",
-      "stargazersCount": 77929,
-      "forksCount": 6357,
-      "language": "C",
-      "topics": [
-        "ai",
-        "alerting",
-        "cncf",
-        "data-visualization",
-        "database",
-        "devops",
-        "docker",
-        "grafana",
-        "influxdb",
-        "kubernetes",
-        "linux",
-        "machine-learning",
-        "mcp",
-        "mongodb",
-        "monitoring",
-        "mysql",
-        "netdata",
-        "observability",
-        "postgresql",
-        "prometheus"
-      ],
-      "releasesUrl": "https://api.github.com/repos/netdata/netdata/releases{/id}",
-      "updatedAt": "2026-03-02T00:22:05Z"
+      "updatedAt": "2026-03-03T01:30:52Z"
     },
     {
       "id": 340547520,
@@ -173,8 +134,8 @@
       "description": "Code at the speed of thought – Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/zed-industries/zed",
-      "stargazersCount": 76182,
-      "forksCount": 7128,
+      "stargazersCount": 76232,
+      "forksCount": 7137,
       "language": "Rust",
       "topics": [
         "gpui",
@@ -183,7 +144,7 @@
         "zed"
       ],
       "releasesUrl": "https://api.github.com/repos/zed-industries/zed/releases{/id}",
-      "updatedAt": "2026-03-02T01:19:27Z"
+      "updatedAt": "2026-03-03T01:23:31Z"
     },
     {
       "id": 578822531,
@@ -196,8 +157,8 @@
       "description": "An open-source cross-platform alternative to AirDrop",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/localsend/localsend",
-      "stargazersCount": 75808,
-      "forksCount": 4032,
+      "stargazersCount": 75867,
+      "forksCount": 4035,
       "language": "Dart",
       "topics": [
         "dart",
@@ -206,7 +167,7 @@
         "flutter-apps"
       ],
       "releasesUrl": "https://api.github.com/repos/localsend/localsend/releases{/id}",
-      "updatedAt": "2026-03-02T01:06:41Z"
+      "updatedAt": "2026-03-03T00:40:56Z"
     },
     {
       "id": 594155488,
@@ -219,8 +180,8 @@
       "description": "#1 PDF Application on GitHub that lets you edit PDFs on any device anywhere",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/Stirling-Tools/Stirling-PDF",
-      "stargazersCount": 74721,
-      "forksCount": 6335,
+      "stargazersCount": 74830,
+      "forksCount": 6341,
       "language": "TypeScript",
       "topics": [
         "docker",
@@ -237,7 +198,7 @@
         "pdfmerger"
       ],
       "releasesUrl": "https://api.github.com/repos/Stirling-Tools/Stirling-PDF/releases{/id}",
-      "updatedAt": "2026-03-02T01:02:44Z"
+      "updatedAt": "2026-03-03T00:59:45Z"
     },
     {
       "id": 377496562,
@@ -250,8 +211,8 @@
       "description": "Bring projects, wikis, and teams together with AI. AppFlowy is the AI collaborative workspace where you achieve more without losing control of your data. The leading open source Notion alternative.",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/AppFlowy-IO/AppFlowy",
-      "stargazersCount": 68314,
-      "forksCount": 4911,
+      "stargazersCount": 68327,
+      "forksCount": 4912,
       "language": "Dart",
       "topics": [
         "blog",
@@ -268,7 +229,7 @@
         "wiki"
       ],
       "releasesUrl": "https://api.github.com/repos/AppFlowy-IO/AppFlowy/releases{/id}",
-      "updatedAt": "2026-03-02T01:05:18Z"
+      "updatedAt": "2026-03-02T19:24:19Z"
     },
     {
       "id": 519859998,
@@ -281,8 +242,8 @@
       "description": "There can be more than Notion and Miro. AFFiNE(pronounced [ə‘fain]) is a next-gen knowledge base that brings planning, sorting and creating all together. Privacy first, open-source, customizable and ready to use. ",
       "defaultBranch": "canary",
       "htmlUrl": "https://github.com/toeverything/AFFiNE",
-      "stargazersCount": 63400,
-      "forksCount": 4437,
+      "stargazersCount": 63446,
+      "forksCount": 4448,
       "language": "TypeScript",
       "topics": [
         "app",
@@ -305,7 +266,7 @@
         "workspace"
       ],
       "releasesUrl": "https://api.github.com/repos/toeverything/AFFiNE/releases{/id}",
-      "updatedAt": "2026-03-02T01:29:12Z"
+      "updatedAt": "2026-03-03T01:20:46Z"
     },
     {
       "id": 51980455,
@@ -318,8 +279,8 @@
       "description": "A cross-platform, OpenGL terminal emulator.",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/alacritty/alacritty",
-      "stargazersCount": 62743,
-      "forksCount": 3314,
+      "stargazersCount": 62729,
+      "forksCount": 3315,
       "language": "Rust",
       "topics": [
         "bsd",
@@ -334,7 +295,7 @@
         "windows"
       ],
       "releasesUrl": "https://api.github.com/repos/alacritty/alacritty/releases{/id}",
-      "updatedAt": "2026-03-02T00:44:36Z"
+      "updatedAt": "2026-03-03T01:31:37Z"
     },
     {
       "id": 965415649,
@@ -347,12 +308,12 @@
       "description": "Lightweight coding agent that runs in your terminal",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/openai/codex",
-      "stargazersCount": 62537,
-      "forksCount": 8316,
+      "stargazersCount": 62697,
+      "forksCount": 8338,
       "language": "Rust",
       "topics": [],
       "releasesUrl": "https://api.github.com/repos/openai/codex/releases{/id}",
-      "updatedAt": "2026-03-02T01:25:00Z"
+      "updatedAt": "2026-03-03T01:31:44Z"
     },
     {
       "id": 753490180,
@@ -365,8 +326,8 @@
       "description": "Daytona is a Secure and Elastic Infrastructure for Running AI-Generated Code",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/daytonaio/daytona",
-      "stargazersCount": 61551,
-      "forksCount": 5074,
+      "stargazersCount": 61628,
+      "forksCount": 5075,
       "language": "TypeScript",
       "topics": [
         "agentic-workflow",
@@ -379,7 +340,7 @@
         "developer-tools"
       ],
       "releasesUrl": "https://api.github.com/repos/daytonaio/daytona/releases{/id}",
-      "updatedAt": "2026-03-02T01:28:18Z"
+      "updatedAt": "2026-03-02T23:53:02Z"
     },
     {
       "id": 92443980,
@@ -392,7 +353,7 @@
       "description": "Official electron build of draw.io",
       "defaultBranch": "dev",
       "htmlUrl": "https://github.com/jgraph/drawio-desktop",
-      "stargazersCount": 59602,
+      "stargazersCount": 59618,
       "forksCount": 5594,
       "language": "JavaScript",
       "topics": [
@@ -402,7 +363,7 @@
         "javascript-applications"
       ],
       "releasesUrl": "https://api.github.com/repos/jgraph/drawio-desktop/releases{/id}",
-      "updatedAt": "2026-03-02T01:17:46Z"
+      "updatedAt": "2026-03-03T00:19:30Z"
     },
     {
       "id": 130688011,
@@ -415,8 +376,8 @@
       "description": "A lightning-fast search engine API bringing AI-powered hybrid search to your sites and applications.",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/meilisearch/meilisearch",
-      "stargazersCount": 56136,
-      "forksCount": 2396,
+      "stargazersCount": 56161,
+      "forksCount": 2394,
       "language": "Rust",
       "topics": [
         "ai",
@@ -441,7 +402,7 @@
         "vectors"
       ],
       "releasesUrl": "https://api.github.com/repos/meilisearch/meilisearch/releases{/id}",
-      "updatedAt": "2026-03-02T00:20:11Z"
+      "updatedAt": "2026-03-03T01:06:01Z"
     },
     {
       "id": 178991158,
@@ -454,7 +415,7 @@
       "description": "☄🌌️  The minimal, blazing-fast, and infinitely customizable prompt for any shell!",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/starship/starship",
-      "stargazersCount": 54473,
+      "stargazersCount": 54457,
       "forksCount": 2393,
       "language": "Rust",
       "topics": [
@@ -472,7 +433,7 @@
         "zsh-theme"
       ],
       "releasesUrl": "https://api.github.com/repos/starship/starship/releases{/id}",
-      "updatedAt": "2026-03-02T00:48:56Z"
+      "updatedAt": "2026-03-02T22:45:04Z"
     },
     {
       "id": 79162682,
@@ -485,8 +446,8 @@
       "description": "Joplin - the privacy-focused note taking app with sync capabilities for Windows, macOS, Linux, Android and iOS.",
       "defaultBranch": "dev",
       "htmlUrl": "https://github.com/laurent22/joplin",
-      "stargazersCount": 53691,
-      "forksCount": 5856,
+      "stargazersCount": 53703,
+      "forksCount": 5863,
       "language": "TypeScript",
       "topics": [
         "android",
@@ -506,7 +467,7 @@
         "webdav"
       ],
       "releasesUrl": "https://api.github.com/repos/laurent22/joplin/releases{/id}",
-      "updatedAt": "2026-03-02T00:32:46Z"
+      "updatedAt": "2026-03-02T23:43:29Z"
     },
     {
       "id": 311683390,
@@ -519,8 +480,8 @@
       "description": "🔍 A Hex Editor for Reverse Engineers, Programmers and people who value their retinas when working at 3 AM.",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/WerWolv/ImHex",
-      "stargazersCount": 52737,
-      "forksCount": 2340,
+      "stargazersCount": 52750,
+      "forksCount": 2342,
       "language": "C++",
       "topics": [
         "analyzer",
@@ -545,7 +506,7 @@
         "windows"
       ],
       "releasesUrl": "https://api.github.com/repos/WerWolv/ImHex/releases{/id}",
-      "updatedAt": "2026-03-01T22:49:16Z"
+      "updatedAt": "2026-03-02T22:47:28Z"
     },
     {
       "id": 49609581,
@@ -558,8 +519,8 @@
       "description": "PowerShell for every system!",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/PowerShell/PowerShell",
-      "stargazersCount": 51696,
-      "forksCount": 8194,
+      "stargazersCount": 51711,
+      "forksCount": 8196,
       "language": "C#",
       "topics": [
         "command-line",
@@ -572,7 +533,7 @@
         "windows"
       ],
       "releasesUrl": "https://api.github.com/repos/PowerShell/PowerShell/releases{/id}",
-      "updatedAt": "2026-03-02T01:28:16Z"
+      "updatedAt": "2026-03-03T01:24:59Z"
     },
     {
       "id": 202367615,
@@ -585,8 +546,8 @@
       "description": "一个基于 Electron 的音乐软件",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/lyswhut/lx-music-desktop",
-      "stargazersCount": 49066,
-      "forksCount": 6654,
+      "stargazersCount": 49095,
+      "forksCount": 6655,
       "language": "TypeScript",
       "topics": [
         "electron",
@@ -595,7 +556,7 @@
         "vue"
       ],
       "releasesUrl": "https://api.github.com/repos/lyswhut/lx-music-desktop/releases{/id}",
-      "updatedAt": "2026-03-01T22:11:35Z"
+      "updatedAt": "2026-03-03T01:11:59Z"
     },
     {
       "id": 44662669,
@@ -608,8 +569,8 @@
       "description": "Free universal database tool and SQL client",
       "defaultBranch": "devel",
       "htmlUrl": "https://github.com/dbeaver/dbeaver",
-      "stargazersCount": 48874,
-      "forksCount": 4050,
+      "stargazersCount": 48889,
+      "forksCount": 4051,
       "language": "Java",
       "topics": [
         "ai",
@@ -632,7 +593,7 @@
         "sqlserver"
       ],
       "releasesUrl": "https://api.github.com/repos/dbeaver/dbeaver/releases{/id}",
-      "updatedAt": "2026-03-02T00:14:14Z"
+      "updatedAt": "2026-03-03T01:28:19Z"
     },
     {
       "id": 551376520,
@@ -645,8 +606,8 @@
       "description": "🤱🏻 Turn any webpage into a desktop app with one command.",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/tw93/Pake",
-      "stargazersCount": 46041,
-      "forksCount": 9043,
+      "stargazersCount": 46271,
+      "forksCount": 9063,
       "language": "Rust",
       "topics": [
         "chatgpt",
@@ -664,7 +625,7 @@
         "youtube"
       ],
       "releasesUrl": "https://api.github.com/repos/tw93/Pake/releases{/id}",
-      "updatedAt": "2026-03-02T01:31:03Z"
+      "updatedAt": "2026-03-03T01:33:16Z"
     },
     {
       "id": 24268127,
@@ -677,8 +638,8 @@
       "description": "A node.js version management utility for Windows. Ironically written in Go.",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/coreybutler/nvm-windows",
-      "stargazersCount": 45128,
-      "forksCount": 3735,
+      "stargazersCount": 45165,
+      "forksCount": 3738,
       "language": "Go",
       "topics": [
         "go",
@@ -694,7 +655,7 @@
         "windows"
       ],
       "releasesUrl": "https://api.github.com/repos/coreybutler/nvm-windows/releases{/id}",
-      "updatedAt": "2026-03-02T01:24:15Z"
+      "updatedAt": "2026-03-03T00:44:35Z"
     },
     {
       "id": 338719962,
@@ -707,8 +668,8 @@
       "description": "🎧 Open source music streaming app! Available for both desktop & mobile!",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/KRTirtho/spotube",
-      "stargazersCount": 44669,
-      "forksCount": 1989,
+      "stargazersCount": 44693,
+      "forksCount": 1990,
       "language": "Dart",
       "topics": [
         "android",
@@ -726,7 +687,7 @@
         "youtube"
       ],
       "releasesUrl": "https://api.github.com/repos/KRTirtho/spotube/releases{/id}",
-      "updatedAt": "2026-03-02T00:18:57Z"
+      "updatedAt": "2026-03-02T23:30:16Z"
     },
     {
       "id": 291438522,
@@ -739,7 +700,7 @@
       "description": "A privacy-first, self-hosted, fully open source personal knowledge management software, written in typescript and golang.",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/siyuan-note/siyuan",
-      "stargazersCount": 41576,
+      "stargazersCount": 41587,
       "forksCount": 2589,
       "language": "TypeScript",
       "topics": [
@@ -764,7 +725,7 @@
         "webdav"
       ],
       "releasesUrl": "https://api.github.com/repos/siyuan-note/siyuan/releases{/id}",
-      "updatedAt": "2026-03-02T01:27:29Z"
+      "updatedAt": "2026-03-03T00:16:58Z"
     },
     {
       "id": 49970642,
@@ -777,7 +738,7 @@
       "description": "The 1.x line is frozen - features and bugfixes now happen on https://github.com/yarnpkg/berry",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/yarnpkg/yarn",
-      "stargazersCount": 41536,
+      "stargazersCount": 41534,
       "forksCount": 2731,
       "language": "JavaScript",
       "topics": [
@@ -787,7 +748,35 @@
         "yarn"
       ],
       "releasesUrl": "https://api.github.com/repos/yarnpkg/yarn/releases{/id}",
-      "updatedAt": "2026-02-28T18:54:25Z"
+      "updatedAt": "2026-03-02T23:54:26Z"
+    },
+    {
+      "id": 125266328,
+      "name": "black",
+      "fullName": "psf/black",
+      "owner": {
+        "login": "psf",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/50630501?v=4"
+      },
+      "description": "The uncompromising Python code formatter",
+      "defaultBranch": "main",
+      "htmlUrl": "https://github.com/psf/black",
+      "stargazersCount": 41410,
+      "forksCount": 2728,
+      "language": "Python",
+      "topics": [
+        "autopep8",
+        "code",
+        "codeformatter",
+        "formatter",
+        "gofmt",
+        "hacktoberfest",
+        "pre-commit-hook",
+        "python",
+        "yapf"
+      ],
+      "releasesUrl": "https://api.github.com/repos/psf/black/releases{/id}",
+      "updatedAt": "2026-03-03T00:48:28Z"
     },
     {
       "id": 266231149,
@@ -800,8 +789,8 @@
       "description": "A privacy-first, open-source platform for knowledge management and collaboration. Download link:  http://github.com/logseq/logseq/releases. roadmap: https://discuss.logseq.com/t/logseq-product-roadmap/34267",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/logseq/logseq",
-      "stargazersCount": 41275,
-      "forksCount": 2466,
+      "stargazersCount": 41281,
+      "forksCount": 2472,
       "language": "Clojure",
       "topics": [
         "clojure",
@@ -817,7 +806,7 @@
         "pkm"
       ],
       "releasesUrl": "https://api.github.com/repos/logseq/logseq/releases{/id}",
-      "updatedAt": "2026-03-02T01:23:34Z"
+      "updatedAt": "2026-03-03T01:04:45Z"
     },
     {
       "id": 542284380,
@@ -830,8 +819,8 @@
       "description": "Opensource IDE For Exploring and Testing API's (lightweight alternative to Postman/Insomnia)",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/usebruno/bruno",
-      "stargazersCount": 41208,
-      "forksCount": 2150,
+      "stargazersCount": 41243,
+      "forksCount": 2155,
       "language": "JavaScript",
       "topics": [
         "api-client",
@@ -850,7 +839,7 @@
         "testing-tools"
       ],
       "releasesUrl": "https://api.github.com/repos/usebruno/bruno/releases{/id}",
-      "updatedAt": "2026-03-02T01:27:12Z"
+      "updatedAt": "2026-03-03T01:24:10Z"
     },
     {
       "id": 679506386,
@@ -863,8 +852,8 @@
       "description": "Jan is an open source alternative to ChatGPT that runs 100% offline on your computer.",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/janhq/jan",
-      "stargazersCount": 40735,
-      "forksCount": 2539,
+      "stargazersCount": 40776,
+      "forksCount": 2540,
       "language": "TypeScript",
       "topics": [
         "chatgpt",
@@ -877,7 +866,7 @@
         "tauri"
       ],
       "releasesUrl": "https://api.github.com/repos/janhq/jan/releases{/id}",
-      "updatedAt": "2026-03-02T01:17:24Z"
+      "updatedAt": "2026-03-03T00:59:50Z"
     },
     {
       "id": 805155266,
@@ -890,8 +879,8 @@
       "description": "AI productivity studio with smart chat, autonomous agents, and 300+ assistants. Unified access to frontier LLMs",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/CherryHQ/cherry-studio",
-      "stargazersCount": 40466,
-      "forksCount": 3734,
+      "stargazersCount": 40546,
+      "forksCount": 3743,
       "language": "TypeScript",
       "topics": [
         "ai-agent",
@@ -907,7 +896,7 @@
         "vibe-coding"
       ],
       "releasesUrl": "https://api.github.com/repos/CherryHQ/cherry-studio/releases{/id}",
-      "updatedAt": "2026-03-02T01:29:33Z"
+      "updatedAt": "2026-03-03T01:33:29Z"
     },
     {
       "id": 778556932,
@@ -920,8 +909,8 @@
       "description": "Welcome to a calmer internet",
       "defaultBranch": "dev",
       "htmlUrl": "https://github.com/zen-browser/desktop",
-      "stargazersCount": 40363,
-      "forksCount": 1350,
+      "stargazersCount": 40390,
+      "forksCount": 1353,
       "language": "JavaScript",
       "topics": [
         "firefox",
@@ -930,7 +919,7 @@
         "zen-browser"
       ],
       "releasesUrl": "https://api.github.com/repos/zen-browser/desktop/releases{/id}",
-      "updatedAt": "2026-03-02T01:00:39Z"
+      "updatedAt": "2026-03-03T01:31:07Z"
     },
     {
       "id": 186024298,
@@ -943,8 +932,8 @@
       "description": "A new type of shell",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/nushell/nushell",
-      "stargazersCount": 38577,
-      "forksCount": 2059,
+      "stargazersCount": 38563,
+      "forksCount": 2062,
       "language": "Rust",
       "topics": [
         "nushell",
@@ -952,7 +941,7 @@
         "shell"
       ],
       "releasesUrl": "https://api.github.com/repos/nushell/nushell/releases{/id}",
-      "updatedAt": "2026-03-02T01:05:38Z"
+      "updatedAt": "2026-03-03T00:43:24Z"
     },
     {
       "id": 120425779,
@@ -965,8 +954,8 @@
       "description": "Lightning-fast and Powerful Code Editor written in Rust",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/lapce/lapce",
-      "stargazersCount": 38110,
-      "forksCount": 1238,
+      "stargazersCount": 38113,
+      "forksCount": 1236,
       "language": "Rust",
       "topics": [
         "code-editor",
@@ -976,7 +965,7 @@
         "vim"
       ],
       "releasesUrl": "https://api.github.com/repos/lapce/lapce/releases{/id}",
-      "updatedAt": "2026-03-02T01:07:54Z"
+      "updatedAt": "2026-03-02T23:55:35Z"
     },
     {
       "id": 410749029,
@@ -989,8 +978,8 @@
       "description": "Spacedrive is an open source cross-platform file explorer, powered by a virtual distributed filesystem written in Rust.",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/spacedriveapp/spacedrive",
-      "stargazersCount": 37180,
-      "forksCount": 1220,
+      "stargazersCount": 37182,
+      "forksCount": 1221,
       "language": "Rust",
       "topics": [
         "cross-platform",
@@ -1003,7 +992,7 @@
         "typescript"
       ],
       "releasesUrl": "https://api.github.com/repos/spacedriveapp/spacedrive/releases{/id}",
-      "updatedAt": "2026-03-01T23:23:54Z"
+      "updatedAt": "2026-03-03T01:26:36Z"
     },
     {
       "id": 15045751,
@@ -1016,7 +1005,7 @@
       "description": "Define and run multi-container applications with Docker",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/docker/compose",
-      "stargazersCount": 37115,
+      "stargazersCount": 37094,
       "forksCount": 5725,
       "language": "Go",
       "topics": [
@@ -1027,7 +1016,33 @@
         "orchestration"
       ],
       "releasesUrl": "https://api.github.com/repos/docker/compose/releases{/id}",
-      "updatedAt": "2026-03-02T01:20:33Z"
+      "updatedAt": "2026-03-03T00:30:17Z"
+    },
+    {
+      "id": 3390243,
+      "name": "servo",
+      "fullName": "servo/servo",
+      "owner": {
+        "login": "servo",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/2566135?v=4"
+      },
+      "description": "Servo aims to empower developers with a lightweight, high-performance alternative for embedding web technologies in applications.",
+      "defaultBranch": "main",
+      "htmlUrl": "https://github.com/servo/servo",
+      "stargazersCount": 35757,
+      "forksCount": 3497,
+      "language": "Rust",
+      "topics": [
+        "browser",
+        "rust",
+        "servo",
+        "web",
+        "webbrowser",
+        "webengine",
+        "webplatform"
+      ],
+      "releasesUrl": "https://api.github.com/repos/servo/servo/releases{/id}",
+      "updatedAt": "2026-03-03T01:28:02Z"
     },
     {
       "id": 13428264,
@@ -1040,8 +1055,8 @@
       "description": "ShareX is a free and open-source application that enables users to capture or record any area of their screen with a single keystroke. It also supports uploading images, text, and various file types to a wide range of destinations.",
       "defaultBranch": "develop",
       "htmlUrl": "https://github.com/ShareX/ShareX",
-      "stargazersCount": 35736,
-      "forksCount": 3615,
+      "stargazersCount": 35742,
+      "forksCount": 3617,
       "language": "C#",
       "topics": [
         "capture",
@@ -1066,33 +1081,7 @@
         "url-shortener"
       ],
       "releasesUrl": "https://api.github.com/repos/ShareX/ShareX/releases{/id}",
-      "updatedAt": "2026-03-02T00:47:53Z"
-    },
-    {
-      "id": 3390243,
-      "name": "servo",
-      "fullName": "servo/servo",
-      "owner": {
-        "login": "servo",
-        "avatarUrl": "https://avatars.githubusercontent.com/u/2566135?v=4"
-      },
-      "description": "Servo aims to empower developers with a lightweight, high-performance alternative for embedding web technologies in applications.",
-      "defaultBranch": "main",
-      "htmlUrl": "https://github.com/servo/servo",
-      "stargazersCount": 35638,
-      "forksCount": 3492,
-      "language": "Rust",
-      "topics": [
-        "browser",
-        "rust",
-        "servo",
-        "web",
-        "webbrowser",
-        "webengine",
-        "webplatform"
-      ],
-      "releasesUrl": "https://api.github.com/repos/servo/servo/releases{/id}",
-      "updatedAt": "2026-03-02T00:37:46Z"
+      "updatedAt": "2026-03-03T00:48:11Z"
     },
     {
       "id": 2810292,
@@ -1105,7 +1094,7 @@
       "description": "The Reliable USB Formatting Utility",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/pbatard/rufus",
-      "stargazersCount": 34916,
+      "stargazersCount": 34926,
       "forksCount": 2969,
       "language": "C",
       "topics": [
@@ -1131,7 +1120,7 @@
         "windows-to-go"
       ],
       "releasesUrl": "https://api.github.com/repos/pbatard/rufus/releases{/id}",
-      "updatedAt": "2026-03-02T01:30:02Z"
+      "updatedAt": "2026-03-02T22:55:20Z"
     },
     {
       "id": 438803890,
@@ -1144,8 +1133,8 @@
       "description": "Self-hosted game stream host for Moonlight.",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/LizardByte/Sunshine",
-      "stargazersCount": 34867,
-      "forksCount": 1726,
+      "stargazersCount": 34899,
+      "forksCount": 1728,
       "language": "C++",
       "topics": [
         "cpp",
@@ -1167,7 +1156,7 @@
         "winget-pkg"
       ],
       "releasesUrl": "https://api.github.com/repos/LizardByte/Sunshine/releases{/id}",
-      "updatedAt": "2026-03-02T01:23:27Z"
+      "updatedAt": "2026-03-03T01:07:00Z"
     },
     {
       "id": 92111509,
@@ -1180,8 +1169,8 @@
       "description": "Build your personal knowledge base with Trilium Notes",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/TriliumNext/Trilium",
-      "stargazersCount": 34831,
-      "forksCount": 2316,
+      "stargazersCount": 34845,
+      "forksCount": 2317,
       "language": "TypeScript",
       "topics": [
         "electron",
@@ -1205,37 +1194,7 @@
         "wiki"
       ],
       "releasesUrl": "https://api.github.com/repos/TriliumNext/Trilium/releases{/id}",
-      "updatedAt": "2026-03-01T22:05:57Z"
-    },
-    {
-      "id": 115110181,
-      "name": "swc",
-      "fullName": "swc-project/swc",
-      "owner": {
-        "login": "swc-project",
-        "avatarUrl": "https://avatars.githubusercontent.com/u/26715726?v=4"
-      },
-      "description": "Rust-based platform for the Web",
-      "defaultBranch": "main",
-      "htmlUrl": "https://github.com/swc-project/swc",
-      "stargazersCount": 33257,
-      "forksCount": 1370,
-      "language": "Rust",
-      "topics": [
-        "babel",
-        "compiler",
-        "ecmascript",
-        "ecmascript-parser",
-        "javascript",
-        "parser",
-        "rust",
-        "swc",
-        "typescript",
-        "typescript-compiler",
-        "typescript-parser"
-      ],
-      "releasesUrl": "https://api.github.com/repos/swc-project/swc/releases{/id}",
-      "updatedAt": "2026-03-01T18:12:46Z"
+      "updatedAt": "2026-03-02T23:15:14Z"
     },
     {
       "id": 519895363,
@@ -1248,7 +1207,7 @@
       "description": "Comfortably monitor your Internet traffic 🕵️‍♂️",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/GyulyVGC/sniffnet",
-      "stargazersCount": 32879,
+      "stargazersCount": 32891,
       "forksCount": 1208,
       "language": "Rust",
       "topics": [
@@ -1273,7 +1232,7 @@
         "windows"
       ],
       "releasesUrl": "https://api.github.com/repos/GyulyVGC/sniffnet/releases{/id}",
-      "updatedAt": "2026-03-02T00:32:50Z"
+      "updatedAt": "2026-03-03T00:11:03Z"
     },
     {
       "id": 678716433,
@@ -1286,8 +1245,8 @@
       "description": "A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free.",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/chen08209/FlClash",
-      "stargazersCount": 32389,
-      "forksCount": 1966,
+      "stargazersCount": 32484,
+      "forksCount": 1969,
       "language": "Dart",
       "topics": [
         "clash",
@@ -1301,7 +1260,7 @@
         "vpn"
       ],
       "releasesUrl": "https://api.github.com/repos/chen08209/FlClash/releases{/id}",
-      "updatedAt": "2026-03-02T01:25:19Z"
+      "updatedAt": "2026-03-03T01:20:36Z"
     },
     {
       "id": 137724480,
@@ -1314,8 +1273,8 @@
       "description": "Blazing fast, instant realtime GraphQL APIs on all your data with fine grained access control, also trigger webhooks on database events.",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/hasura/graphql-engine",
-      "stargazersCount": 31909,
-      "forksCount": 2853,
+      "stargazersCount": 31908,
+      "forksCount": 2851,
       "language": "TypeScript",
       "topics": [
         "access-control",
@@ -1335,7 +1294,7 @@
         "supergraph"
       ],
       "releasesUrl": "https://api.github.com/repos/hasura/graphql-engine/releases{/id}",
-      "updatedAt": "2026-02-28T17:06:47Z"
+      "updatedAt": "2026-03-02T23:20:45Z"
     },
     {
       "id": 436658287,
@@ -1348,8 +1307,8 @@
       "description": "A scalable, distributed, collaborative, document-graph database, for the realtime web",
       "defaultBranch": "main",
       "htmlUrl": "https://github.com/surrealdb/surrealdb",
-      "stargazersCount": 31402,
-      "forksCount": 1153,
+      "stargazersCount": 31417,
+      "forksCount": 1157,
       "language": "Rust",
       "topics": [
         "backend-as-a-service",
@@ -1372,7 +1331,7 @@
         "web"
       ],
       "releasesUrl": "https://api.github.com/repos/surrealdb/surrealdb/releases{/id}",
-      "updatedAt": "2026-03-02T01:24:38Z"
+      "updatedAt": "2026-03-03T00:10:00Z"
     },
     {
       "id": 55626935,
@@ -1385,12 +1344,12 @@
       "description": "Windows Subsystem for Linux",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/microsoft/WSL",
-      "stargazersCount": 31220,
+      "stargazersCount": 31238,
       "forksCount": 1627,
       "language": "C++",
       "topics": [],
       "releasesUrl": "https://api.github.com/repos/microsoft/WSL/releases{/id}",
-      "updatedAt": "2026-03-02T00:35:16Z"
+      "updatedAt": "2026-03-03T01:14:02Z"
     },
     {
       "id": 182306991,
@@ -1403,8 +1362,8 @@
       "description": "Pear 🍐 is extension for music player",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/pear-devs/pear-desktop",
-      "stargazersCount": 30919,
-      "forksCount": 1763,
+      "stargazersCount": 30926,
+      "forksCount": 1761,
       "language": "TypeScript",
       "topics": [
         "desktop-app",
@@ -1420,7 +1379,7 @@
         "windows"
       ],
       "releasesUrl": "https://api.github.com/repos/pear-devs/pear-desktop/releases{/id}",
-      "updatedAt": "2026-03-01T23:03:47Z"
+      "updatedAt": "2026-03-03T01:18:46Z"
     },
     {
       "id": 19374812,
@@ -1433,8 +1392,8 @@
       "description": "Telegram Desktop messaging app",
       "defaultBranch": "dev",
       "htmlUrl": "https://github.com/telegramdesktop/tdesktop",
-      "stargazersCount": 30008,
-      "forksCount": 6347,
+      "stargazersCount": 30032,
+      "forksCount": 6350,
       "language": "C++",
       "topics": [
         "messenger",
@@ -1444,7 +1403,7 @@
         "telegram-solution"
       ],
       "releasesUrl": "https://api.github.com/repos/telegramdesktop/tdesktop/releases{/id}",
-      "updatedAt": "2026-03-02T01:13:56Z"
+      "updatedAt": "2026-03-03T00:05:50Z"
     },
     {
       "id": 292065578,
@@ -1457,7 +1416,7 @@
       "description": "Multi functional app to find duplicates, empty folders, similar images etc.",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/qarmin/czkawka",
-      "stargazersCount": 29594,
+      "stargazersCount": 29615,
       "forksCount": 983,
       "language": "Rust",
       "topics": [
@@ -1472,7 +1431,7 @@
         "similar-videos"
       ],
       "releasesUrl": "https://api.github.com/repos/qarmin/czkawka/releases{/id}",
-      "updatedAt": "2026-03-01T23:41:19Z"
+      "updatedAt": "2026-03-03T01:32:07Z"
     },
     {
       "id": 90902132,
@@ -1485,7 +1444,7 @@
       "description": "Powerful yet simple to use screenshot software :desktop_computer: :camera_flash:",
       "defaultBranch": "master",
       "htmlUrl": "https://github.com/flameshot-org/flameshot",
-      "stargazersCount": 29395,
+      "stargazersCount": 29406,
       "forksCount": 1858,
       "language": "C++",
       "topics": [
@@ -1500,7 +1459,30 @@
         "screenshot"
       ],
       "releasesUrl": "https://api.github.com/repos/flameshot-org/flameshot/releases{/id}",
-      "updatedAt": "2026-03-02T01:29:27Z"
+      "updatedAt": "2026-03-03T01:00:39Z"
+    },
+    {
+      "id": 33014811,
+      "name": "notepad-plus-plus",
+      "fullName": "notepad-plus-plus/notepad-plus-plus",
+      "owner": {
+        "login": "notepad-plus-plus",
+        "avatarUrl": "https://avatars.githubusercontent.com/u/12589084?v=4"
+      },
+      "description": "Notepad++ official repository",
+      "defaultBranch": "master",
+      "htmlUrl": "https://github.com/notepad-plus-plus/notepad-plus-plus",
+      "stargazersCount": 27258,
+      "forksCount": 5119,
+      "language": "C++",
+      "topics": [
+        "editor",
+        "notepad",
+        "notepad-official",
+        "windows"
+      ],
+      "releasesUrl": "https://api.github.com/repos/notepad-plus-plus/notepad-plus-plus/releases{/id}",
+      "updatedAt": "2026-03-02T20:09:46Z"
     }
   ]
 }
